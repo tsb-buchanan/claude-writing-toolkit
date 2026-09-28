@@ -44,7 +44,7 @@ The cap is 600 words, or 1,200 with `budget: standard`. `budget: auto` is standa
 8. Length: the sections over their target, and cuts with the words each saves.
 9. Long sentences: the rate per section, from doc_stats.py, and the worst sections for human-write.
 10. The writer's notes: applied, or why not.
-11. Proposed moves, numbered, each naming what moves and where to. Keep together paragraphs that point back to each other, such as one that says "this budget" and the one before it. If the moves change the order, add the new outline.
+11. Proposed moves, numbered, each naming what moves and where to. Before you move a paragraph, read the next one. If it points back, as with "this budget", move both. If the moves change the order, add the new outline.
 
 Never move, cut or split a keep or keep light passage.
 
@@ -57,9 +57,9 @@ End with: "Reply with the moves you approve (for example 1, 3), all, or none. Th
 1. Apply only the moves the writer approved. A new heading gets no body text.
 2. Before you cut a duplicate, check that each fact in it survives elsewhere: `python3 scripts/check_protected.py FILE DRAFT` must list no number as "no longer anywhere in the text".
 3. List each removed passage, and where its content now is.
-4. A Word file, a PDF or pasted text, in either place: follow word-output.md. Use "move" for a move, "delete" for a cut, and "insert_after" with a heading style for a new heading.
+4. A Word file, a PDF or pasted text, in either place: follow word-output.md. Use "move", "delete", and "insert_after" with a heading style.
 5. LaTeX, Markdown or text, in either place: follow text-output.md. In Claude Code, stop after the diff and wait for a second approval. Then write the file, but commit only after the map.
-6. Once the tracked copy or the file is done, go straight on to section 4. Every run ends with the map.
+6. Every run ends with the map (section 4). With a Word file, write the map before you deliver, so that the writer gets the tracked copy and the map in one message.
 
 If the writer approves no moves, go to section 4.
 

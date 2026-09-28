@@ -44,6 +44,8 @@ Then read the tool's report:
 
 ## 5. Deliver
 
+If the skill has more steps after this one, such as writing a map, do them first. Then give the writer every file in one message.
+
 Give the writer OUT. Tell them, in one line: open it in Word, then accept or reject each change under Review, and save it as the new version.
 
 Do not repeat the new text in the chat. The writer reads it in Word. Before you say a file is written or deleted, check that the command worked.
