@@ -8,13 +8,13 @@ metadata:
 
 # human-write
 
-Rewrite one section in the writer's own style. Change only what a rule below or the profile asks for, never just to sound more human or to fool an AI detector.
+Rewrite one section in the writer's style. Change only what a rule below or the profile asks for, never just to sound more human or to fool an AI detector.
 
 1. Write no em dashes, in your messages or in the text. Use a colon, a comma or a new sentence instead.
 2. Change nothing outside the target section.
 3. Write no file before the writer approves, except a tracked-changes copy of a Word file: the writer approves each change in Word.
 
-The files named below are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude Code). The scripts are in its scripts/ folder.
+Files named below are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude Code). Scripts are in its scripts/ folder.
 
 ## 1. Read only what you need
 
@@ -24,7 +24,7 @@ The files named below are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude 
    1. A Word file: `python3 scripts/docx_tool.py read FILE --section "NAME"`.
    2. LaTeX, Markdown or text: read the section's lines from the file.
    3. Pasted text: that is the section.
-4. One section per run. If the writer asks for more, do the first and say to start a new chat for the next.
+4. One section per run. If the writer asks for more, do the first, and suggest a new chat for the next.
 5. If the request says "light", fix only voice, spelling, dashes, number format and banned words.
 
 ## 2. Rewrite
@@ -38,10 +38,10 @@ The rules, most important first:
 5. Lead each paragraph with its claim.
 6. Keep sentences short. A sentence over the profile's limit needs a reason, and you list it.
 7. Cut filler, the profile's banned words, recaps (sentences that sum up what the reader has just read), and signposts that say what the section will do. Keep a closing line that leads to the next section, even a wrong one. Say what a result means once, where the section concludes.
-8. Say what a method, model or process does in literal words, not in a metaphor such as "the model struggles". If the section does not say, flag it.
+8. Say what a method, model, machine or process does in literal words, not in a metaphor such as "the model struggles". If the section does not say, flag it.
 9. Follow the profile's voice, spelling, dash rule, number rule and house rules. Credit others by name for their work. If the voice is "I" and the work was shared, write "my supervisor and I" or name the people.
-10. Use the map's key terms. Without a map, flag a thing with two names for doc-flow, and leave it. Flag a symbol that stands for two things, or differs from the notation table, for notation-check.
-11. Flag, but do not fix: material that belongs in, or repeats, another section; a wrong or missing handoff; and a number that differs from the map. These are for doc-flow.
+10. Use the map's key terms. Without a map, leave a thing that has two names as it is, and flag it for doc-flow. Flag a symbol that stands for two things, or differs from the notation table, for notation-check.
+11. Flag for doc-flow, but do not fix: material that belongs in, or repeats, another section; a wrong or missing handoff; and a number that differs from the map.
 
 ## 3. Check before you show
 
@@ -49,13 +49,13 @@ The draft is the copy that text-output.md or word-output.md makes. For a tracked
 
 1. `python3 scripts/check_protected.py FILE DRAFT`
 2. `python3 scripts/doc_stats.py DRAFT --section "NAME" --limit N --banned "WORDS"`, with the profile's sentence limit and words to cut. Judge its first-person words and numbers against the profile's voice and number rules.
-3. In LaTeX, note what each symbol stands for, to catch one that stands for two things.
-4. Ask of each paragraph: does it do this section's job, and does it name something specific: a case, a number or a source? A section on method or background should not report results. Flag each paragraph that fails.
+3. In LaTeX, note what each symbol in the section stands for. A symbol that stands for two things is a flag for notation-check.
+4. Ask of each paragraph: does it do this section's job (a method or background section reports no results), and does it name something specific: a case, a number or a source? Flag each paragraph that fails.
 5. Fix everything the scripts report, or list it.
 
 ## 4. The lists
 
-Give these lists, one line per item, with no em dashes. Leave out an empty list. Add at most 100 words of other text.
+Give these lists, one line per item, with no em dashes. Leave out empty lists. Add at most 100 words of other text.
 
 1. Number changes: the old and new form, and where.
 2. Removed sentences, and where their content went.
@@ -63,7 +63,7 @@ Give these lists, one line per item, with no em dashes. Leave out an empty list.
 4. Long sentences kept: word count and reason.
 5. Flags, for the writer or another skill.
 
-## 5. Show the change, then write it after approval
+## 5. Show the change, then write after approval
 
 1. A Word file, a PDF or pasted text, in either place: follow word-output.md.
 2. LaTeX, Markdown or text, in either place: follow text-output.md. In Claude Code, the commit message is "human-write: SECTION".
