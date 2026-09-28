@@ -1,6 +1,6 @@
 # Reusable Crate Pilot at the Eastside Depot
 
-*Results and recommendation for the Operations Board, Tidewell Grocers. An invented sample for testing the writing toolkit: every name and number in it is made up.*
+*Results and recommendation for the Operations Board, Tidewell Grocers. An invented sample: every name and number in it is made up.*
 
 ## Summary
 

@@ -48,6 +48,7 @@ One line per chapter or section, numbered as the reader sees them. After the nam
 Example: `3. A model of the return desk | file: ch3.tex | paper: published | passes: light`
 
 human-write and doc-flow read paper and passes.
+Use them only for a chapter that as a whole is based on a paper. If only one section comes from a paper, give the chapter no paper detail. Mark that section keep light in the file instead.
 
 ### keep
 

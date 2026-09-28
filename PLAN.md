@@ -75,8 +75,10 @@ claude-writing-toolkit/
   skills/                       what users install
     doc-setup/
       SKILL.md
-      profile-template.md       read when the profile is written
+      profile-template.md       read when the profile is written (copy of templates/doc-profile.md)
       thesis-questions.md       extra interview questions, read in thesis mode only
+      project-instructions.md   copy of the template of the same name
+      claude-md-snippet.md      copy of the template of the same name
     human-write/
       SKILL.md
       word-output.md            how to return tracked changes; read only for Word output
@@ -120,7 +122,7 @@ claude-writing-toolkit/
     test_symbols.py
   tools/
     build_samples.py            builds samples/*/built/ from the sources (PDFs need LibreOffice and LaTeX)
-    sync_shared.py              copies shared/ files into the skills; fails if a copy differs
+    sync_shared.py              copies shared/ files and templates into the skills that use them; --check fails if a copy differs
     check_repo.py               dash check, SKILL.md size and frontmatter, copies in sync
     build_release.py            one zip per skill, one zip with all skills, the Word guide
   .github/workflows/
@@ -553,7 +555,7 @@ How and where:
    4. that the uploaded Word file itself reaches the sandbox, so the script can read it and its comments;
    5. that tracked changes written by the script open cleanly in Word and LibreOffice.
 2. The samples, planted.md and expected results. The profile template and the profile reference. Done on 28 September 2026.
-3. doc-setup.
+3. doc-setup. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
 4. The shared scripts and their unit tests.
 5. human-write. Test it on both samples, on the web and in Claude Code.
 6. doc-flow and the map. Test human-write again, now with a map.
