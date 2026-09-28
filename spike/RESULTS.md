@@ -19,7 +19,7 @@ Build step 1 of PLAN.md, run on 28 September 2026: in Claude Code, and on claude
 3. Claude found the skill folder at /mnt/skills/plugins/docx-spike and the upload at /mnt/user-data/uploads/. The SKILL.md needed no fixed paths.
 4. The script applied 3 of 3 changes. All three self-checks passed.
 5. The rewrite: "A small group of local volunteers started the cafe to reduce waste in the neighbourhood and to teach basic repair skills to anyone who wanted to learn them." It kept every fact, and Word shows the bold and italic words unchanged.
-6. Not checked yet: which skills Claude opened, and Accept All and Reject All in Word. The script's own checks cover the text. The human-write release test will check both in Word.
+6. Accept All and Reject All both work in Word. Not recorded: which skills Claude opened.
 
 ## Claude Code
 
@@ -44,6 +44,7 @@ Build step 1 of PLAN.md, run on 28 September 2026: in Claude Code, and on claude
 5. LibreOffice writes an explicit "Normal" style. The real read command should show it as body text.
 6. Inserted text takes the paragraph's most common formatting. Check this on more documents.
 7. A paragraph that holds a comment cannot be rewritten yet. The real script should keep the comment on the rewritten paragraph.
-8. This container had LibreOffice without its Writer part. Test machines need libreoffice-writer and poppler-utils.
+8. This container had LibreOffice without its Writer part. Test machines need libreoffice-writer and poppler-utils, and LaTeX (texlive-latex-base and texlive-latex-recommended) to build the thesis sample.
 9. Claude Code's own overhead (about $0.11 per short session on Sonnet) costs more than the skill's output. PLAN.md section 10.4 uses this number.
 10. A writer who uploads the skills on claude.ai and also installs them in a repo gets two copies with different names, for example `human-write` and `anthropic-skills:human-write`. The Claude Code guide must say to use one or the other.
+11. The spike script edits a table cell when asked. The real script must refuse table cells, as PLAN.md section 9 says. The sample report tests this (RP18).

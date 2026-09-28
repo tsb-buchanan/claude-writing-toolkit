@@ -1,0 +1,142 @@
+% The sample chapter for the writing toolkit tests.
+% Invented sample: every name, number and reference is made up.
+% The problems planted in it are listed in planted.md.
+\chapter{Sizing the return desks at a tool library}
+\label{ch:desks}
+
+\section{Introduction}
+\label{sec:intro}
+
+The Millbrook Tool Library lends tools to its members for a small yearly fee.
+Members borrow drills, ladders and garden tools, and they bring them back to a return desk, where a volunteer checks each tool for damage before it goes back on the shelf.
+On busy days a queue forms at the desk, and some members leave without returning their tools.
+Most tool libraries in the region report the same problem.
+
+This chapter applies the queueing model from Chapter~\ref{ch:background} to the return desk at Millbrook.
+In this chapter we will first set up the model, then derive the waiting times, then describe a staffing rule and finally compare the model with the desk logs.
+
+The key quantity is the utilisation $\rho = \lambda/(N\mu)$, which says how busy the desks are.
+When $\rho$ is close to one, even small changes in demand lead to long queues.
+
+The library opens on weekday afternoons from 14:00 to 18:00 and on Saturdays from 9:00 to 13:00.
+Returns peak on Saturday mornings, when members bring back the tools they borrowed for weekend projects.
+
+\section{The model}
+\label{sec:model}
+
+We assume that returns arrive as a Poisson process with rate $\lambda$ returns per hour, and that each volunteer serves returns at rate $\mu$ returns per hour, with exponential service times.
+The library opens $N$ desks, each staffed by one volunteer.
+These are the assumptions of Chapter~\ref{ch:background}, and they give the standard M/M/$N$ queue \cite{example2021}.
+Exponential service times suit this setting, because a check can take a few seconds for a clean trowel or several minutes for a hedge trimmer with a damaged cable \cite{sample2019}.
+
+The desk logs give the parameter values.
+A volunteer takes 3 minutes on average to check a returned tool, so $\mu = 20$ returns per hour.
+The library has space for 2 desks, so $N$ is either one or two.
+
+With these values the utilisation is
+\begin{equation}
+  \rho = \frac{\lambda}{N\mu},
+  \label{eq:util}
+\end{equation}
+as in Equation~\eqref{eq:rho}.
+A borrower has to wait whenever all $N$ desks are busy.
+For one desk, this happens with probability $P_w = \rho$.
+For two desks, the Erlang C formula gives
+\begin{equation}
+  P_w = \frac{2\rho^2}{1+\rho}.
+  \label{eq:erlang2}
+\end{equation}
+
+The time in system $W$ grows quickly as $\rho$ approaches one, which is why the choice between one and two desks matters.
+With the values above, the model gave a mean wait of 2.0 minutes on weekday afternoons, which matched the desk logs closely.
+Section~\ref{sec:waiting} compares the model with the desk logs.
+
+\section{Waiting times}
+\label{sec:waiting}
+
+Two measures of delay matter to a borrower.
+The waiting time $W_q$ is the time a borrower spends in the queue before a volunteer starts to check the tool.
+The time in system $W$ also includes the check itself, so
+\begin{equation}
+  W = W_q + \frac{1}{\mu}.
+  \label{eq:w}
+\end{equation}
+The library's target concerns the waiting time, not the time in system, because members do not mind the check itself.
+The target is a mean waiting time of less than 3 minutes.
+
+It is worth noting that, for a queue with $N$ desks, the mean waiting time can clearly be obtained from the probability of waiting in Equation~\eqref{eq:erlang2} by dividing it by the spare service capacity $N\mu - \lambda$, as shown in the very well known result \cite{example2021}, which gives
+\begin{equation}
+  W_q = \frac{P_w}{N\mu - \lambda},
+  \label{eq:wq}
+\end{equation}
+and this is the formula that I use throughout the rest of the chapter, including in Section~\ref{sec:logs}.
+
+Little's law links the mean number of borrowers at the desk area to the time in system:
+\begin{equation}
+  N = \lambda W.
+  \label{eq:little}
+\end{equation}
+For one desk and $\lambda = 8$ returns per hour, Equation~\eqref{eq:wq} gives $W_q = 0.4/12$ hours, or 2.0 minutes, and the desk area holds about $N = 0.67$ borrowers on average.
+
+\section{A staffing rule}
+\label{sec:rule}
+
+% keep light: adapted from the published paper writer2025
+This section is adapted from \cite{writer2025}, which I wrote with my supervisor.
+I built the model and ran the analysis, and my supervisor suggested the form of the rule.
+
+We propose a simple staffing rule.
+Open one desk while returns stay below 10 per hour, and open a second desk when they rise above that level.
+The rule follows from Equation~\eqref{eq:wq}, since with one desk the waiting time stays under 3 minutes only while $\lambda < 10$, and it is clearly easy for volunteers to apply because the desk logs already record the number of returns in each hour of the day.
+
+With two desks, the same target holds up to about 28 returns per hour, which is well above the busiest hour in the logs.
+% end keep
+
+\section{Checking the model against the desk logs}
+\label{sec:logs}
+
+The library kept desk logs for 16 weeks.
+Each log records the time each borrower joined the queue and the time the check began, so the observed waiting time can be compared with $W_q$ from our model.
+The logs hold 3,296 returns. Of these, 41 had no start time and are left out.
+On weekday afternoons returns ran at 4 to 9 per hour; on Saturday mornings they ran at 16--22 per hour.
+
+The library opens on weekday afternoons from 14:00 to 18:00 and on Saturdays from 9:00 to 13:00.
+Returns peak on Saturday mornings, when members bring back the tools they borrowed for weekend projects.
+
+Table~\ref{tab:logs} compares the observed and predicted waiting times.
+For the Saturday morning average with two desks, the predicted waiting time is
+\begin{equation}
+  W_q = \frac{P_w}{2\mu - \Lambda} = \frac{0.279}{40 - 18}\ \text{hours},
+  \label{eq:saturday}
+\end{equation}
+or 0.76 minutes, against 0.9 minutes in the logs.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lccc}
+    Period & Desks & Predicted $W_q$ (min) & Observed $W_q$ (min) \\
+    \hline
+    Weekday afternoon ($\lambda = 8$) & 1 & 2.0 & 2.1 \\
+    Saturday morning ($\lambda = 18$) & 2 & 0.76 & 0.9 \\
+    Saturday peak hour ($\lambda = 22$) & 2 & 1.3 & 1.7 \\
+  \end{tabular}
+  \caption{Predicted and observed waiting times at the return desk.}
+  \label{tab:logs}
+\end{table}
+
+The model slightly underestimates the waiting time at the Saturday peak.
+The time in system is less affected, because the check itself takes the same 3 minutes whatever the length of the queue.
+The largest gap is at the busiest hour, where the logs show 1.7 minutes against 1.3 predicted.
+Service times at the peak are less regular than the exponential assumption allows, because volunteers check heavy tools more slowly when the queue is long.
+
+The rule is sensitive to the service rate.
+If a check took 4 minutes on average, so that $\mu = 15$ returns per hour, one desk would meet the target only below about 6 returns per hour.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+One desk keeps the mean waiting time under 3 minutes as long as returns stay below 10 per hour.
+Above that, a second desk is needed, and two desks keep the waiting time under 3 minutes up to about 28 returns per hour.
+The desk logs agree with the model to within half a minute.
+For Millbrook, this means opening a second desk on Saturday mornings only.
+The next chapter extends the model to borrowers who leave the queue before they are served.

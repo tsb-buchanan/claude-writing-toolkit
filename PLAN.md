@@ -55,7 +55,7 @@ Where things live:
 | Map | a file in the Project's knowledge | doc-notes/doc-map.md |
 | The document | uploaded to the chat when a step needs it (Word or PDF), or pasted | files in the repo (LaTeX, Markdown, text or Word) |
 | The writer's notes | the chat message, or comments in the Word file | doc-notes/notes.md, or comments in the source |
-| Keep marks | a Word comment that starts with "keep" | `% keep` and `% end keep` (LaTeX), `<!-- keep -->` and `<!-- end keep -->` (Markdown) |
+| Keep marks | a Word comment that starts with "keep" or "keep light" | `% keep` or `% keep light`, then `% end keep` (LaTeX); `<!-- keep -->` or `<!-- keep light -->`, then `<!-- end keep -->` (Markdown) |
 | Plans and reports | the chat | doc-notes/plans/ and doc-notes/checks/ |
 | Symbol table (thesis) | a file in the Project's knowledge | doc-notes/notation.md |
 | Changes | a Word file with tracked changes | a diff, then the file, then a commit |
@@ -108,8 +108,9 @@ claude-writing-toolkit/
     claude-code-guide.md
     profile-reference.md        every field, its defaults per mode, which skills read it
   samples/
-    report/                     invented report (.docx, .pdf, .md) and planted.md
-    thesis/                     invented chapter (.tex, .pdf), a stub of the chapter before it, planted.md
+    report/                     source.md, planted.md and doc-profile.md; built/ holds report.md, .docx and .pdf
+    thesis/                     the LaTeX chapter, a stub of the chapter before it, refs.bib, planted.md and
+                                doc-profile.md; built/ holds thesis.pdf
   tests/
     expected/                   what each skill must find, change and leave alone, per sample
     results/                    one file per release test
@@ -118,6 +119,7 @@ claude-writing-toolkit/
     test_doc_stats.py
     test_symbols.py
   tools/
+    build_samples.py            builds samples/*/built/ from the sources (PDFs need LibreOffice and LaTeX)
     sync_shared.py              copies shared/ files into the skills; fails if a copy differs
     check_repo.py               dash check, SKILL.md size and frontmatter, copies in sync
     build_release.py            one zip per skill, one zip with all skills, the Word guide
@@ -149,7 +151,7 @@ What a Claude Code writer's repo holds after setup:
 3. Show first. Write only after approval. On the web the approval is in Word (tracked changes). In Claude Code it is a reply to a diff.
 4. Never change the value of a number, a fact, a citation, an equation, a cross-reference or a quotation. Only notation-check may change symbols inside equations.
 5. Never add a claim, result or citation that is not in the document or the writer's notes. Every new sentence starts with [NEW].
-6. Never rewrite a keep passage.
+6. Never rewrite a keep passage. A keep light passage gets light passes only: voice, spelling, dashes, number format and banned words.
 7. Stay in scope. Flag work that belongs to another skill or another part of the document. Do not do it.
 8. Check every change before showing it: protected content with check_protected.py, dashes and banned words with doc_stats.py.
 9. Keep the output within the caps in section 10.
@@ -213,7 +215,7 @@ Rules:
 4. No recaps or signposting inside the section.
 5. Never change numbers, facts, citations or equations. The format of a number may change to meet the profile's number rule. Its value never changes.
 6. Never invent claims, results or citations. A new sentence may only restate what the section or the map already says, and it starts with [NEW].
-7. Never rewrite a keep passage. A chapter based on a paper gets only the passes the profile allows.
+7. Never rewrite a keep passage. A keep light passage, or a chapter based on a paper, gets only the passes it allows.
 8. Follow the profile's voice, spelling, dash rule and house rules.
 9. Use the map's key terms. A symbol that differs from the notation table is flagged for notation-check, not changed.
 10. Material that belongs elsewhere is flagged for doc-flow, not moved.
@@ -322,7 +324,7 @@ Stage 2, the report. Then stop.
 3. Symbols used before they are defined, under the profile's rule (in each chapter, or once per thesis).
 4. Numbered fixes. The profile's notation source decides. Where it is silent, the skill proposes a convention and marks it as the writer's decision.
 
-Stage 3: apply approved fixes only. This is the only skill that may change symbols inside equations. It changes nothing else.
+Stage 3: apply approved fixes only. This is the only skill that may change symbols inside equations. It changes nothing else. It may fix symbols in a keep light passage, but never in a keep passage.
 
 | | Web | Claude Code |
 |---|---|---|
@@ -348,7 +350,7 @@ Document:
 | opening | where the main message must appear | each chapter states its claim in its first paragraph | the first paragraph states the message and the decision needed | doc-flow, doc-check |
 | parts | chapters or sections in reading order; per part, optional: file (Claude Code), audience, length, paper and passes (thesis) | chapters, from the files | sections, from the headings | doc-flow, doc-check, notation-check |
 | length | length target | none | summary on one page | doc-flow, doc-check |
-| keep | passages never rewritten, besides keep marks in the text | quotations | quotations; legal and policy text | human-write, doc-flow |
+| keep | passages never rewritten, besides keep and keep light marks in the text | quotations | quotations; legal and policy text | human-write, doc-flow, notation-check |
 | budget | auto, lean or standard (section 10) | auto: standard in Claude Code, lean on the web | auto: lean | human-write, doc-flow |
 
 Style guide:
@@ -485,15 +487,15 @@ Notes:
 
 ## 11. Test plan
 
-Two invented samples, written for this repo. Never a real user document. They are short, so a full test round stays cheap.
+Two invented samples, written for this repo. Never a real user document. They are short, so a full test round stays cheap. tools/build_samples.py builds their Word, Markdown and PDF files, and each sample holds the profile the tests use.
 
-1. A report of about 3,000 words in six sections, for a fictional organization. Formats: Word (main), PDF and Markdown.
-2. A thesis chapter of about 4,000 words in LaTeX, on an invented model, with its PDF. A half-page stub of the chapter before it, so notation-check has a second chapter to compare.
+1. A report of about 1,800 words in six sections, for a fictional organization. Formats: Word (main), PDF and Markdown.
+2. A thesis chapter in LaTeX, on an invented model: about 1,000 words of prose plus equations, with its PDF. A half-page stub of the chapter before it, so notation-check has a second chapter to compare.
 
-Each sample has planted.md, which lists every planted problem and where it is.
+Each sample has planted.md, which lists every planted problem, where it is and what is right.
 
-1. Report: the main message buried at the end; a number that differs between two sections; one concept under two names; a repeated paragraph; filler and banned words; sentences over 25 words; a recap and a signpost; a claim without a source; an em dash; a quoted clause marked keep; a Word comment whose note goes against what doc-flow would suggest; a table and a footnote the script must leave alone.
-2. Chapter: the chapter's claim only at the end; a symbol variant; a symbol clash; a symbol used before its definition; an equation, a citation and a cross-reference inside text that needs rewriting; a section from a published paper with light passes only; voice slips; a repeated paragraph; a broken handoff; a result in the method section; an en dash range; and a false alarm: two terms that look inconsistent but name two different things.
+1. Report: the main message buried at the end; two numbers that differ between sections; one concept under two names; a repeated paragraph; filler and banned words; sentences over 25 words; a recap and a signpost; a broken handoff; a result in the method section; a claim without a source; an em dash; number format slips; a voice slip; a quoted clause marked keep; a Word comment whose note goes against what doc-flow would suggest; a table and a footnote the script must leave alone.
+2. Chapter: the chapter's claim only at the end; a symbol variant; a symbol clash; a symbol used before its definition; an equation, a citation and a cross-reference inside text that needs rewriting; a section from a published paper, marked keep light; voice slips; a repeated paragraph; a broken handoff; a result in the method section; an en dash range; a broken house rule; a number format slip; a claim without a source; and a false alarm: two terms that look inconsistent but name two different things.
 
 tests/expected/ says, per skill and sample, what the skill must find, what it must change and what it must leave alone.
 
@@ -502,7 +504,7 @@ Pass criteria:
 1. doc-setup: finishes in three rounds or fewer; the profile fits on one page; report mode leaves out thesis fields; a rerun shows a diff.
 2. human-write: fixes every planted style problem in the section; check_protected.py finds no change to numbers, citations, equations, cross-references or keep passages; every new sentence has [NEW]; every list is complete against planted.md; the Word file opens in Word and LibreOffice and shows tracked changes; nothing outside the section changes; in Claude Code, nothing is written before approval.
 3. doc-flow: finds the buried message, the repetition, the broken handoff and the misplaced result; follows the writer's note over its own suggestion; applies only structural moves; loses no fact; the map fits on one page and has the right key numbers.
-4. doc-check quick: finds at least 8 of the 10 most important planted problems; shows no more than 10; changes nothing.
+4. doc-check quick: finds at least 80% of the issues that tests/expected lists for its checklist; shows no more than 10; changes nothing.
 5. doc-check full: finds every planted problem; rejects the false alarm; compares correctly with an earlier report.
 6. notation-check: finds the variant, the clash and the symbol used before its definition; changes only approved symbols and nothing outside the math; stops in report mode.
 
@@ -550,7 +552,7 @@ How and where:
    3. whether an uploaded Word file's whole text enters the context (this changes 10.4);
    4. that the uploaded Word file itself reaches the sandbox, so the script can read it and its comments;
    5. that tracked changes written by the script open cleanly in Word and LibreOffice.
-2. The samples, planted.md and expected results. The profile template and the profile reference.
+2. The samples, planted.md and expected results. The profile template and the profile reference. Done on 28 September 2026.
 3. doc-setup.
 4. The shared scripts and their unit tests.
 5. human-write. Test it on both samples, on the web and in Claude Code.

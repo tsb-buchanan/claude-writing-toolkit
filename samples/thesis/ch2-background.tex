@@ -1,0 +1,18 @@
+% A stub of Chapter 2, so that notation-check has a second chapter to compare.
+% Invented sample: every name, number and reference is made up.
+\chapter{Background: one queue, several desks}
+\label{ch:background}
+
+This chapter sets out the notation that the rest of the thesis uses.
+Borrowers arrive at a return desk at random, at an average rate of $\lambda$ returns per hour.
+Each desk serves returns at an average rate of $\mu$ returns per hour.
+The library opens $N$ desks, each staffed by one volunteer.
+
+The utilisation of the desks is the share of time that they are busy:
+\begin{equation}
+  \rho = \frac{\lambda}{N\mu}.
+  \label{eq:rho}
+\end{equation}
+The queue is stable only when $\rho < 1$.
+Throughout the thesis, I assume that arrivals follow a Poisson process and that service times are exponential, as in the standard treatment \cite{example2021}.
+Chapter~\ref{ch:desks} applies this model to the return desk of a tool library.
