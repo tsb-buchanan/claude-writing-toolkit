@@ -570,7 +570,7 @@ How and where:
 8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs. The guide, the README, the release build and the workflows were done on 28 September 2026. The release itself waits for the claude.ai tests, because CLAUDE.md asks for a test on the web before any release.
 9. doc-check full mode. Done on 28 September 2026: it passed in Claude Code on Opus on both samples, twice each (tests/results/0.1-dev.md).
 10. notation-check. Done on 28 September 2026: it passed in Claude Code on the sample thesis, and stopped in report mode (tests/results/0.1-dev.md). Open point: it did not find $W$ used before its definition (TH04). The claude.ai run waits for the release test.
-11. The Claude Code guide, a full release test, and release v1.0.
+11. The Claude Code guide, a full release test, and release v1.0. The guide and the Claude Code part of the release test were done on 28 September 2026 (tests/results/0.1-dev.md). The claude.ai part (tests/web-test.md) and the release wait for the writer.
 12. Later: the plugin.
 
 ## 15. Decisions
