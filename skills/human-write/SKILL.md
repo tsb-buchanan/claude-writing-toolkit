@@ -41,7 +41,7 @@ The rules, most important first:
 8. Say what a method, model, machine or process does in literal words, not in a metaphor such as "the model struggles". If the section does not say, flag it.
 9. Follow the profile's voice, spelling, dash rule, number rule and house rules. Credit others by name for their work. If the voice is "I" and the work was shared, write "my supervisor and I" or name the people.
 10. Use the map's key terms. Without a map, leave a thing that has two names as it is, and flag it for doc-flow. Flag a symbol that stands for two things, or differs from the notation table, for notation-check.
-11. Flag for doc-flow, but do not fix: material that belongs in, or repeats, another section; a wrong or missing handoff; and a number that differs from the map.
+11. Flag, but do not fix: material that belongs in, or repeats, another section; a wrong or missing handoff; and a number that differs from the map. These are for doc-flow.
 
 ## 3. Check before you show
 
@@ -50,7 +50,7 @@ The draft is the copy that text-output.md or word-output.md makes. For a tracked
 1. `python3 scripts/check_protected.py FILE DRAFT`
 2. `python3 scripts/doc_stats.py DRAFT --section "NAME" --limit N --banned "WORDS"`, with the profile's sentence limit and words to cut. Judge its first-person words and numbers against the profile's voice and number rules.
 3. In LaTeX, note what each symbol in the section stands for. A symbol that stands for two things is a flag for notation-check.
-4. Ask of each paragraph: does it do this section's job (a method or background section reports no results), and does it name something specific: a case, a number or a source? Flag each paragraph that fails.
+4. Ask of each paragraph: does it do this section's job (a method or background section reports no results), and does it name a case, a number or a source? Flag each paragraph that fails.
 5. Fix everything the scripts report, or list it.
 
 ## 4. The lists
