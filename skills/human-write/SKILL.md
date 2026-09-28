@@ -33,7 +33,7 @@ The rules, most important first:
 
 1. Never change a keep passage: one marked keep in the text, or one on the profile's keep list. A keep light passage, or a chapter whose passes are light, gets light fixes only.
 2. Never change the value of a number, or a fact, citation, cross-reference or quotation. The format of a number may change to meet the profile's number rule.
-3. Never change anything inside an equation, not even its final comma or full stop. A display equation is part of a sentence, so make the words around it fit it. If it ends with a comma, the same sentence goes on after it.
+3. Never change anything inside an equation, not even its final comma or full stop, and add no new math. A display equation is part of a sentence, so make the words around it fit it. If it ends with a comma, the same sentence goes on after it.
 4. Never add a claim, result or citation. A new sentence may only restate what the section or the map already says. Start every new sentence with [NEW].
 5. Lead each paragraph with its claim.
 6. Keep sentences short. A sentence over the profile's limit needs a reason, and you list it.

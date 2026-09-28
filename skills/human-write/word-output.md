@@ -30,10 +30,11 @@ Write the changes as JSON in a file named changes.json. In Claude Code, put it i
 3. Make one change per paragraph. Leave unchanged paragraphs out.
 4. "style" is optional. Use it only for headings, with a style the outline shows.
 5. "after": 0 means before the first paragraph. After a table cell means after the whole table.
+6. "move" takes a block of paragraphs: "paras": [first, last]. The block goes after the paragraph "after" names.
 
 ## 4. Apply the changes
 
-Run `python3 scripts/docx_tool.py apply FILE changes.json OUT`. Name OUT like the file, with "-tracked" before ".docx".
+Run `python3 scripts/docx_tool.py apply FILE changes.json OUT`. Name OUT like the file, with "-tracked" before ".docx". The tool never overwrites a file. If OUT is left from an earlier run, add a number: NAME-tracked-2.docx. To redo your own OUT in this run, add `--replace`.
 
 Then read the tool's report:
 
@@ -46,6 +47,8 @@ Then read the tool's report:
 Give the writer OUT. Tell them, in one line: open it in Word, then accept or reject each change under Review, and save it as the new version.
 
 Do not repeat the new text in the chat. The writer reads it in Word. Say that a file is written or deleted only after the command worked.
+
+In Claude Code, do not commit the tracked copy or changes.json. The writer commits the file after deciding in Word.
 
 ## PDF or pasted text
 

@@ -63,8 +63,8 @@ Must leave alone:
 
 Must find, in its report:
 
-1. The claim only at the end (TH01). It proposes a structural fix, such as moving the claim paragraph from 3.6 into 3.1, and flags the sentence work that follows for human-write.
-2. The repeated paragraph (TH08). It proposes to cut the copy in 3.5.
+1. The claim only at the end (TH01). It proposes a fix: a structural move, or sentence work for human-write, which can restate the claim from 3.6 in 3.1 as a [NEW] sentence. Moving the whole paragraph out of 3.6 would leave the conclusion without its claim, so the second fix is the better one.
+2. The repeated paragraph (TH08). It proposes to cut one copy, and says which place keeps it and why. planted.md keeps the first, but keeping the copy in 3.5, next to the table that uses it, is also sound.
 3. The broken handoff (TH09).
 4. The result in the method section (TH10).
 5. The equation in the first section (TH13), against the house rule.

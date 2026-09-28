@@ -55,6 +55,23 @@ class DocxTool(unittest.TestCase):
         run = subprocess.run([sys.executable, script, REPORT, out], stdout=subprocess.PIPE, text=True)
         self.assertEqual(run.returncode, 1, run.stdout)
 
+    def test_apply_never_overwrites_without_replace(self):
+        script = os.path.join(ROOT, "shared", "docx_tool.py")
+        spec = os.path.join(self.tmp, "c.json")
+        out = os.path.join(self.tmp, "out.docx")
+        with open(spec, "w", encoding="utf-8") as f:
+            json.dump({"changes": [{"op": "delete", "para": 17}]}, f)
+        run = lambda *extra: subprocess.run([sys.executable, script, "apply", REPORT, spec, out] + list(extra),
+                                            stdout=subprocess.PIPE, text=True)
+        self.assertEqual(run().returncode, 0)
+        second = run()
+        self.assertEqual(second.returncode, 2)
+        self.assertIn("already exists", second.stdout)
+        self.assertEqual(run("--replace").returncode, 0)
+        same = subprocess.run([sys.executable, script, "apply", REPORT, spec, REPORT, "--replace"],
+                              stdout=subprocess.PIPE, text=True)
+        self.assertEqual(same.returncode, 2)
+
     def test_structure(self):
         doc = docx_tool.Doc(REPORT)
         self.assertEqual(len(doc.paras), 71)

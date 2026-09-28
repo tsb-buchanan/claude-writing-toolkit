@@ -21,11 +21,13 @@ COPIES = {
     "templates/doc-profile.md": ["skills/doc-setup/profile-template.md"],
     "templates/project-instructions.md": ["skills/doc-setup/project-instructions.md"],
     "templates/claude-md-snippet.md": ["skills/doc-setup/claude-md-snippet.md"],
-    "shared/docx_tool.py": ["skills/human-write/scripts/docx_tool.py"],
-    "shared/check_protected.py": ["skills/human-write/scripts/check_protected.py"],
-    "shared/doc_stats.py": ["skills/human-write/scripts/doc_stats.py"],
-    "shared/word-output.md": ["skills/human-write/word-output.md"],
-    "shared/text-output.md": ["skills/human-write/text-output.md"],
+    "templates/doc-map.md": ["skills/doc-flow/map-template.md"],
+    "shared/docx_tool.py": ["skills/human-write/scripts/docx_tool.py", "skills/doc-flow/scripts/docx_tool.py"],
+    "shared/check_protected.py": ["skills/human-write/scripts/check_protected.py",
+                                  "skills/doc-flow/scripts/check_protected.py"],
+    "shared/doc_stats.py": ["skills/human-write/scripts/doc_stats.py", "skills/doc-flow/scripts/doc_stats.py"],
+    "shared/word-output.md": ["skills/human-write/word-output.md", "skills/doc-flow/word-output.md"],
+    "shared/text-output.md": ["skills/human-write/text-output.md", "skills/doc-flow/text-output.md"],
 }
 
 

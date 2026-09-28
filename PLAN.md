@@ -259,23 +259,25 @@ Reads: the profile, the whole document or chapter, the writer's notes and the cu
 
 Stage 1, the report. Then stop.
 
-1. Main message: quoted, with its place. Is it stated as early as the profile's opening rule asks?
-2. One line per section: its job, and whether it moves toward the main message.
+1. Main message: quoted, with its place. Is it stated as early as the profile's opening rule asks? If not, a move that brings it forward: its paragraph or its whole section. Only if neither can move, a flag for human-write, which can restate it up front.
+2. Sections that do not move toward the main message, one line each with its job.
 3. Repetition: where, and which place should keep the material.
 4. Broken handoffs between sections.
-5. Material in the wrong place. Material that belongs in another chapter is flagged, never moved there.
-6. Where to condense, with the words each cut saves. Current length against the target.
-7. Long-sentence rate per section, from doc_stats.py.
-8. The writer's notes: applied, or why not. The notes win over the skill's own suggestions.
-9. The proposed outline, and a numbered list of moves: reorder, merge, cut a duplicate, add a heading.
+5. Material in the wrong place, such as a result in a method section. Material that belongs in another chapter is flagged, never moved there.
+6. House rules, each checked against every paragraph. Borderline cases are reported as such.
+7. Numbers that differ between sections: reported, never fixed.
+8. Where to condense, with the words each cut saves. Current length against the target.
+9. Long-sentence rate per section, from doc_stats.py.
+10. The writer's notes: applied, or why not. The notes win over the skill's own suggestions.
+11. A numbered list of moves: reorder, merge, cut a duplicate, add a heading. The new outline, if the moves change the order.
 
-Stage 2, after the writer approves all moves or some of them: apply only structural moves. No sentence is rewritten. A new heading gets no body text. The facts in a cut duplicate must survive elsewhere, and check_protected.py confirms it. Every removed passage is listed with where its content went.
+Stage 2, after the writer approves all moves or some of them: apply only structural moves. Moves work on whole sentences, paragraphs, sections and headings. The words of a sentence never change. A paragraph moves together with one that refers back to it. A new heading gets no body text. The facts in a cut duplicate must survive elsewhere, and check_protected.py confirms it. Every removed passage is listed with where its content went.
 
 Stage 3: write the map (section 8). "doc-flow map only" skips stages 1 and 2. It reads the document and writes the map. This is the cheap way to give human-write a map.
 
 | | Web | Claude Code |
 |---|---|---|
-| Stage 1 | the report in the chat | the report in the chat, saved in doc-notes/plans/ |
+| Stage 1 | the report in the chat | the report saved in doc-notes/plans/; the chat gives the main message finding, the moves and the path |
 | Stage 2 | a copy of the Word file with the moves as tracked changes (a move shows as a deletion and an insertion) | a draft copy, a diff that marks moved lines, a second approval, then the file |
 | Map | a doc-map.md file to download and add to the Project's knowledge | doc-notes/doc-map.md |
 | Commit | none | one commit for the plan, the moves and the map |
@@ -562,7 +564,7 @@ How and where:
 3. doc-setup. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
 4. The shared scripts and their unit tests. Done on 28 September 2026: 31 tests pass, on the samples and on a copy saved by LibreOffice.
 5. human-write. Done on 28 September 2026: it passed in Claude Code on both samples, in Word, Markdown and LaTeX (tests/results/0.1-dev.md). One open point: it does not flag a result in a method section, so doc-flow must. The claude.ai run waits for the release test.
-6. doc-flow and the map. Test human-write again, now with a map.
+6. doc-flow and the map. Test human-write again, now with a map. Done on 28 September 2026: doc-flow passed in Claude Code on both samples, in Word, Markdown and LaTeX, and so did "map only" (tests/results/0.1-dev.md). Open point: its reports on the report sample run to about 800 words, against the lean cap of 600. The claude.ai run waits for the release test.
 7. doc-check quick.
 8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs.
 9. doc-check full mode.

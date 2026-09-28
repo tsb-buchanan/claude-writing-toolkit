@@ -12,6 +12,8 @@ Commands:
   from-text TEXT OUT           Build a plain Word file from a text file, so changes can be
                                tracked against it. "# ", "## " and "### " start headings.
 
+apply and from-text never overwrite a file, unless you add --replace.
+
 CHANGES looks like this. Paragraph numbers come from outline or read.
   {"author": "Claude", "changes": [
     {"op": "replace", "para": 6, "expect": "first words", "text": "the whole new paragraph"},
@@ -946,10 +948,21 @@ def main(argv):
     p.add_argument("file")
     p.add_argument("changes")
     p.add_argument("out")
+    p.add_argument("--replace", action="store_true", help="overwrite OUT if it exists")
     p = sub.add_parser("from-text")
     p.add_argument("text")
     p.add_argument("out")
+    p.add_argument("--replace", action="store_true", help="overwrite OUT if it exists")
     args = parser.parse_args(argv)
+    if args.cmd in ("apply", "from-text") and os.path.exists(args.out):
+        source = args.file if args.cmd == "apply" else args.text
+        if os.path.abspath(args.out) == os.path.abspath(source):
+            print("error: OUT is the input file. Write the changes into a new file.")
+            return 2
+        if not args.replace:
+            print("error: %s already exists. To redo your own output, add --replace. "
+                  "If it is from an earlier run, use a new name, such as NAME-tracked-2.docx." % args.out)
+            return 2
     try:
         if args.cmd == "outline":
             cmd_outline(args.file)
