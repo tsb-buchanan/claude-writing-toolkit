@@ -3,7 +3,7 @@ name: doc-check
 description: Read-only. Checks a report or a thesis chapter against a fixed checklist and lists the top 10 issues, each with a next step. Run it before the document goes out.
 license: MIT
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # doc-check
@@ -45,14 +45,14 @@ Check each item across the whole document or chapter.
 1. Main message: clear, and as early as the profile's opening rule asks. In a thesis chapter, the chapter's claim.
 2. Numbers: one quantity has one value everywhere, and the value the map gives.
 3. Terms: one thing has one name, as the map's key terms say. Before you report two names, check that they mean the same thing. Two defined measures with their own names are not an issue.
-4. Claims that need a source and have none: a claim about the world beyond the document's own work, with no citation or source.
+4. Claims that need a source and have none: a claim about the world beyond the document's own work, with no citation or source. A pointer such as "previous studies show" that names no work counts too.
 5. Length: suits the audience and the profile's length target.
-6. The profile's style guide: sentence limit, words to cut, dash rule, number format, voice, house rules, and [NEW] marks left in the text. doc_stats.py lists all but the house rules. Judge its first-person words and numbers against the voice and number rules: a unit after a digit, such as "3 minutes", may be fine.
+6. The profile's style guide: sentence limit, words to cut, dash rule, number format, voice, house rules, and [NEW] marks left in the text. doc_stats.py lists all but the house rules. Judge its first-person words and numbers against the voice and number rules: a unit after a digit, such as "3 minutes", may be fine. It also lists openings that start three or more paragraphs. A repeated linking phrase, such as "In addition,", is an issue. A repeated subject may be fine.
 7. Thesis mode, with `contribution: yes`: a chapter or section based on a co-authored paper says who did what.
 
 ## 4. The list
 
-Give the top 10 issues only, most important first: message, then numbers, sources, terms, length, and style last. Give all 10 when there are that many. Merge issues of one kind into one line, such as all the banned words. Put the small style slips (voice, dashes, number format, words to cut) in one or two lines, with an example of each, so that they never crowd out the rest.
+Give the top 10 issues only, most important first: message, then numbers, sources, terms, length, and style last. Give all 10 when there are that many. Merge issues of one kind into one line, such as all the banned words. Put the small style slips (voice, dashes, number format, words to cut, repeated openings) in one or two lines, with an example of each, so that they never crowd out the rest.
 
 Each issue, in about 40 words:
 

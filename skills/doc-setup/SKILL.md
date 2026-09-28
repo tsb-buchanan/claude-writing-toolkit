@@ -3,7 +3,7 @@ name: doc-setup
 description: Interviews a writer and writes their one-page writing profile for a thesis or a report. Use to set up the writing toolkit or to change the profile.
 license: MIT
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # doc-setup

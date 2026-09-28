@@ -22,7 +22,7 @@ docs/profile-reference.md explains every field of the profile.
 ## The cycle
 
 1. `/doc-flow chapters/ch3.tex`: a report on the structure, saved in doc-notes/plans/. Reply with the moves you approve. It shows the moves as a diff, and changes the file after your second approval. Then it writes the map, doc-notes/doc-map.md. `/doc-flow map only chapters/ch3.tex` writes just the map.
-2. `/human-write chapters/ch3.tex "3.2"`: rewrites one section. Name the section by its heading or its number. Add "light" for small fixes only.
+2. `/human-write chapters/ch3.tex "3.2"`: rewrites one section. Name the section by its heading or its number. Add "light" for small fixes only. It changes only what a rule in the skill or your profile asks for, never just to sound more human. docs/sources.md says where the rules come from.
 3. `/notation-check`, for a thesis: the symbol table in doc-notes/notation.md, a report, and fixes to symbols in math after you approve.
 4. `/doc-check chapters/ch3.tex`: the top 10 issues, saved in doc-notes/checks/. `/doc-check full` runs full mode (below).
 

@@ -105,7 +105,7 @@ If you only want the map, type: **Use doc-flow, map only.**
    2. sentences it removed, and where their content went;
    3. sentences whose meaning could have shifted, old and new;
    4. long sentences it kept, and why;
-   5. notes for the other skills.
+   5. flags: things only you can fix, such as a paragraph that names nothing specific, and notes for the other skills.
 3. Read the lists first, especially the sentences whose meaning could have shifted.
 4. Open the tracked copy in Word, and accept or reject each change.
 5. A sentence that starts with **[NEW]** is new. It only restates what your document or map already says. Check it, then delete the "[NEW] " mark, or reject the sentence.
@@ -168,6 +168,8 @@ Your document goes to claude.ai like any other upload. Before you upload confide
 3. They never rewrite a passage you marked keep.
 4. They never change your own file. You always get a copy with tracked changes, and you decide.
 5. They never move material into another document or chapter.
+6. They never cut or soften a limit you stated, such as a risk or a case where something did not work.
+7. They never change your words just to sound more human, or to get past an AI detector. Every change follows a rule in the skill or in your profile.
 
 ## When something goes wrong
 
