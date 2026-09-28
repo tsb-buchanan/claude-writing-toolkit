@@ -10,4 +10,4 @@ How to change a LaTeX, Markdown or text file in Claude Code. The writer sees eve
 6. After approval, copy the draft over the file. Then delete the draft with `rm DRAFT`, as a command on its own.
 7. Unless the profile says commit: no, commit only the changed files, with the message the skill gives. Never commit drafts/. Never push.
 8. If the writer rejects the change, delete the draft the same way. The file stays as it was.
-9. Say that a file is written or deleted only after the command worked.
+9. Before you say a file is written or deleted, check that the command worked.

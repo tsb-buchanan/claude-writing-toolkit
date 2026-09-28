@@ -46,7 +46,7 @@ Then read the tool's report:
 
 Give the writer OUT. Tell them, in one line: open it in Word, then accept or reject each change under Review, and save it as the new version.
 
-Do not repeat the new text in the chat. The writer reads it in Word. Say that a file is written or deleted only after the command worked.
+Do not repeat the new text in the chat. The writer reads it in Word. Before you say a file is written or deleted, check that the command worked.
 
 In Claude Code, do not commit the tracked copy or changes.json. The writer commits the file after deciding in Word.
 

@@ -565,7 +565,7 @@ How and where:
 4. The shared scripts and their unit tests. Done on 28 September 2026: 31 tests pass, on the samples and on a copy saved by LibreOffice.
 5. human-write. Done on 28 September 2026: it passed in Claude Code on both samples, in Word, Markdown and LaTeX (tests/results/0.1-dev.md). One open point: it does not flag a result in a method section, so doc-flow must. The claude.ai run waits for the release test.
 6. doc-flow and the map. Test human-write again, now with a map. Done on 28 September 2026: doc-flow passed in Claude Code on both samples, in Word, Markdown and LaTeX, and so did "map only" (tests/results/0.1-dev.md). Open point: its reports on the report sample run to about 800 words, against the lean cap of 600. The claude.ai run waits for the release test.
-7. doc-check quick.
+7. doc-check quick. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
 8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs.
 9. doc-check full mode.
 10. notation-check.

@@ -48,7 +48,7 @@ The cap is 600 words, or 1,200 with `budget: standard`. `budget: auto` is standa
 
 Never move, cut or split a keep or keep light passage. Move a paragraph together with one that points back to it, such as "this budget".
 
-On claude.ai, the report goes in the chat. In Claude Code, save it as plans/DATE-flow.md in the notes folder (doc-notes/ unless the profile says otherwise), with the date as YYYY-MM-DD. Then give in the chat only the main message finding, the proposed moves and the report's path.
+On claude.ai, the report goes in the chat. In Claude Code, save it as doc-notes/plans/DATE-flow.md, with the date as YYYY-MM-DD. If the profile gives another notes folder, use it in place of doc-notes/. Then give in the chat only the main message finding, the proposed moves and the report's path.
 
 End with: "Reply with the moves you approve (for example 1, 3), all, or none."
 
@@ -73,6 +73,6 @@ On claude.ai: save doc-map.md with the outputs, and tell the writer, in one line
 
 In Claude Code: write doc-notes/doc-map.md. Unless the profile says commit: no, commit the report, the map and any changed text file together, with the message "doc-flow: FILE". Never push.
 
-Say that a file is written only after the command worked.
+Before you say a file is written, check that the command worked.
 
 End with one line: the section with the most long sentences, for human-write, or doc-check to check the whole document.
