@@ -556,7 +556,7 @@ How and where:
    5. that tracked changes written by the script open cleanly in Word and LibreOffice.
 2. The samples, planted.md and expected results. The profile template and the profile reference. Done on 28 September 2026.
 3. doc-setup. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
-4. The shared scripts and their unit tests.
+4. The shared scripts and their unit tests. Done on 28 September 2026: 31 tests pass, on the samples and on a copy saved by LibreOffice.
 5. human-write. Test it on both samples, on the web and in Claude Code.
 6. doc-flow and the map. Test human-write again, now with a map.
 7. doc-check quick.

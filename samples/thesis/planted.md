@@ -20,7 +20,7 @@ LaTeX writes an en dash as two hyphens, so the planted en dash (TH11) is plain A
 | TH03 | A symbol clash: $N$ is the number of desks, but also the mean number of borrowers. | 3.3, paragraph 3 (Equation eq:little and "$N = 0.67$") | Chapter 2 is the notation source, so $N$ stays the number of desks. The mean number of borrowers needs its own symbol ($L$ is usual). That choice is the writer's. |
 | TH04 | A symbol used before its definition: $W$, the time in system. | Used in 3.2, paragraph 4; defined in 3.3, paragraph 1 | The profile asks for a definition at first use in each chapter. |
 | TH05 | An equation, a citation and cross-references inside text that needs rewriting. | 3.3, paragraph 2 (eq:wq, \cite{example2021}, \eqref{eq:erlang2}, \ref{sec:logs}) | The prose may change. The equation, citation and references may not. |
-| TH06 | A section adapted from a published paper, marked keep light. It holds a voice slip ("We propose"), a banned word ("clearly") and a 45-word sentence. | 3.4, all of it | Light passes only: fix the voice (and credit the supervisor) and cut "clearly". The long sentence stays. |
+| TH06 | A section adapted from a published paper, marked keep light. It holds a voice slip ("We propose"), a banned word ("clearly") and a 44-word sentence. | 3.4, all of it | Light passes only: fix the voice (and credit the supervisor) and cut "clearly". The long sentence stays. |
 | TH07 | Voice slips in a thesis written as "I". | 3.1, paragraph 2 ("we will"); 3.2, paragraph 1 ("We assume"); 3.5, paragraph 1 ("our model") | Use "I". |
 | TH08 | A repeated paragraph, word for word. | 3.1, paragraph 4; 3.5, paragraph 2 | Keep the first. Cut the second. |
 | TH09 | A broken handoff. | 3.2, paragraph 4, last sentence ("Section 3.3 compares the model with the desk logs.") | Section 3.3 derives the waiting times. The comparison is in 3.5. |
@@ -30,7 +30,7 @@ LaTeX writes an en dash as two hyphens, so the planted en dash (TH11) is plain A
 | TH13 | A broken house rule: an equation in the chapter's first section. | 3.1, paragraph 3 ("$\rho = \lambda/(N\mu)$") | House rule: no equations in a chapter's first section. |
 | TH14 | A number format slip: "2 desks" should be "two desks". | 3.2, paragraph 2 | Fix the format. |
 | TH15 | Filler and banned words: "It is worth noting", "clearly", "very"; and "clearly" inside the keep light section. | 3.3, paragraph 2; 3.4, paragraph 2 | Cut them. In 3.4, only by a light pass. |
-| TH16 | A sentence far over 25 words (65 words, around Equation eq:wq). | 3.3, paragraph 2 | Split it without touching the equation. |
+| TH16 | A sentence far over 25 words (63 words, around Equation eq:wq). | 3.3, paragraph 2 | Split it without touching the equation. |
 | TH17 | A claim without a source. | 3.1, paragraph 1 ("Most tool libraries in the region report the same problem.") | Needs a source, or a softer claim. |
 
 ## Also in the chapter, and not a problem
@@ -40,14 +40,16 @@ LaTeX writes an en dash as two hyphens, so the planted en dash (TH11) is plain A
 
 ## Sentences over 25 words
 
+Words are counted as shared/doc_stats.py counts them: citations and references are not words, and inline math counts as one word.
+
 | Words | Where | Note |
 |---|---|---|
 | 31 | 3.1, paragraph 1 | "Members borrow drills, ..." |
 | 29 | 3.1, paragraph 2 | the roadmap sentence, with the voice slip |
 | 31 | 3.2, paragraph 1 | "We assume that returns arrive ..." |
-| 30 | 3.2, paragraph 1 | "Exponential service times suit this setting, ..." |
-| 65 | 3.3, paragraph 2 | planted (TH16) |
-| 45 | 3.4, paragraph 2 | inside keep light: must stay |
+| 29 | 3.2, paragraph 1 | "Exponential service times suit this setting, ..." |
+| 63 | 3.3, paragraph 2 | planted (TH16) |
+| 44 | 3.4, paragraph 2 | inside keep light: must stay |
 | 29 | 3.5, paragraph 1 | "Each log records ..." |
 | 27 | 3.5, paragraph 5 | "If a check took 4 minutes ..." |
 

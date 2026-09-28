@@ -29,7 +29,7 @@ Must:
 Must change:
 
 1. Cut "It is worth noting", "clearly" and "very" (TH15).
-2. Split the 65-word sentence (TH16) without touching Equation eq:wq.
+2. Split the 63-word sentence (TH16) without touching Equation eq:wq.
 
 Must flag, not change: $N$ in Equation eq:little and in "$N = 0.67$" (TH03), for notation-check.
 
@@ -50,7 +50,7 @@ Must change, by light passes only:
 Must leave alone:
 
 1. Every other word.
-2. The 45-word sentence, listed as kept, with the reason: the passage is marked keep light.
+2. The 44-word sentence, listed as kept, with the reason: the passage is marked keep light.
 3. \cite{writer2025}, \eqref{eq:wq}, $\lambda < 10$, and the lines % keep light and % end keep.
 
 ### Both runs
