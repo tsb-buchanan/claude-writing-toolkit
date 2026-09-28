@@ -15,7 +15,7 @@ Review the structure of one report or one thesis chapter. Apply only the moves t
 3. The writer's notes win. If a note blocks a suggestion, follow the note, and say what you would have suggested.
 4. Change the document only after the writer approves.
 
-Files named below are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude Code). Scripts are in its scripts/ folder.
+Files named below, and the scripts/ folder, are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude Code).
 
 ## 1. Read
 
@@ -34,23 +34,23 @@ Files named below are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude Code
 
 The cap is 600 words, or 1,200 with `budget: standard`. `budget: auto` is standard for a thesis in Claude Code, and lean otherwise. Give one line per finding. Leave out a heading with nothing to report.
 
-1. Main message (a thesis chapter: its claim): quote it, with its place. If it comes later than the profile's opening rule asks, propose a move that brings it forward: its paragraph, or its whole section. Only if neither can move, flag it for human-write.
+1. Main message (a thesis chapter: its claim): quote it, with its place. If it comes later than the profile's opening rule asks, propose moving its paragraph or its whole section forward. If neither can move, flag it for human-write.
 2. Sections that do not move toward the main message: one line each, with the section's job.
 3. Repetition: where, and which place should keep it, and why.
 4. Handoffs: each opening or closing line that points to another section. Is it right?
 5. Material in the wrong place. Check each paragraph of a method or background section for a result: a figure the work produced. Material that belongs in another chapter is flagged, never moved there.
 6. House rules: check each one against every paragraph. Report a borderline case, and say what it turns on.
-7. Numbers that differ between sections. Report them, and fix neither. The writer decides.
+7. Numbers that differ between sections. Report them, and fix neither.
 8. Length: the sections over their target, and cuts with the words each saves.
 9. Long sentences: the rate per section, from doc_stats.py, and the worst sections for human-write.
 10. The writer's notes: applied, or why not.
-11. Proposed moves, numbered. Each names what moves, and where to. If the moves change the order, add the new outline, one line per section.
+11. Proposed moves, numbered, each naming what moves and where to. Keep together paragraphs that point back to each other, such as one that says "this budget" and the one before it. If the moves change the order, add the new outline.
 
-Never move, cut or split a keep or keep light passage. Move a paragraph together with one that points back to it, such as "this budget".
+Never move, cut or split a keep or keep light passage.
 
-On claude.ai, the report goes in the chat. In Claude Code, save it as doc-notes/plans/DATE-flow.md, with the date as YYYY-MM-DD. If the profile gives another notes folder, use it in place of doc-notes/. Then give in the chat only the main message finding, the proposed moves and the report's path.
+On claude.ai, the report goes in the chat. In Claude Code, save it as doc-notes/plans/DATE-flow.md (or in the profile's notes folder), with the date as YYYY-MM-DD. Then give in the chat only the main message finding, the proposed moves and the report's path.
 
-End with: "Reply with the moves you approve (for example 1, 3), all, or none."
+End with: "Reply with the moves you approve (for example 1, 3), all, or none. Then I apply them and write the document map."
 
 ## 3. Stage 2: apply the approved moves
 
@@ -59,6 +59,7 @@ End with: "Reply with the moves you approve (for example 1, 3), all, or none."
 3. List each removed passage, and where its content now is.
 4. A Word file, a PDF or pasted text, in either place: follow word-output.md. Use "move" for a move, "delete" for a cut, and "insert_after" with a heading style for a new heading.
 5. LaTeX, Markdown or text, in either place: follow text-output.md. In Claude Code, stop after the diff and wait for a second approval. Then write the file, but commit only after the map.
+6. Once the tracked copy or the file is done, go straight on to section 4. Every run ends with the map.
 
 If the writer approves no moves, go to section 4.
 
@@ -67,9 +68,8 @@ If the writer approves no moves, go to section 4.
 Follow map-template.md. Write what the document says after the approved moves.
 
 1. A report: one page. A thesis: one block of one page for this chapter. Replace only this chapter's block.
-2. Key numbers: mark a conflict, and do not pick a value.
 
-On claude.ai: save doc-map.md with the outputs, and tell the writer, in one line, to add it to the Project's knowledge in place of the old map.
+On claude.ai: save doc-map.md with the outputs. Tell the writer to add it to the Project's knowledge in place of the old map.
 
 In Claude Code: write doc-notes/doc-map.md. Unless the profile says commit: no, commit the report, the map and any changed text file together, with the message "doc-flow: FILE". Never push.
 
