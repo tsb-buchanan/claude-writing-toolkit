@@ -129,6 +129,7 @@ claude-writing-toolkit/
     sync_shared.py              copies shared/ files and templates into the skills that use them; --check fails if a copy differs
     check_repo.py               dash check, SKILL.md size and frontmatter, copies in sync
     build_release.py            one zip per skill, one zip with all skills, the Word guide
+    build_guide.py              builds web-guide.docx from docs/web-guide.md
   .github/workflows/
     checks.yml                  runs check_repo.py and the tests on every push
     release.yml                 on a version tag, builds the release files and attaches them
@@ -566,7 +567,7 @@ How and where:
 5. human-write. Done on 28 September 2026: it passed in Claude Code on both samples, in Word, Markdown and LaTeX (tests/results/0.1-dev.md). One open point: it does not flag a result in a method section, so doc-flow must. The claude.ai run waits for the release test.
 6. doc-flow and the map. Test human-write again, now with a map. Done on 28 September 2026: doc-flow passed in Claude Code on both samples, in Word, Markdown and LaTeX, and so did "map only" (tests/results/0.1-dev.md). Open point: its reports on the report sample run to about 800 words, against the lean cap of 600. The claude.ai run waits for the release test.
 7. doc-check quick. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
-8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs.
+8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs. The guide, the README, the release build and the workflows were done on 28 September 2026. The release itself waits for the claude.ai tests, because CLAUDE.md asks for a test on the web before any release.
 9. doc-check full mode.
 10. notation-check.
 11. The Claude Code guide, a full release test, and release v1.0.

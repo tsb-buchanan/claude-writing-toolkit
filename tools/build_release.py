@@ -3,6 +3,7 @@
 
 1. One zip per skill, for claude.ai: dist/<skill>.zip holds the folder <skill>/.
 2. One zip with every skill, for Claude Code: dist/writing-toolkit-skills.zip.
+3. The web guide as a Word file: dist/web-guide.docx, from docs/web-guide.md.
 
 Run tools/check_repo.py first. The zips are not tracked in git.
 Standard library only.
@@ -57,6 +58,9 @@ def main():
         for name in names:
             add_skill(z, name)
     print("wrote %s" % os.path.relpath(path, ROOT))
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import build_guide
+    print("wrote %s" % os.path.relpath(build_guide.build(out=os.path.join(DIST, "web-guide.docx")), ROOT))
     return 0
 
 
