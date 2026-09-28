@@ -34,6 +34,14 @@ In the Word file, the keep mark and the note are Word comments. In the Markdown 
 | RP17 | A result in the method section: 2% of crates damaged by week six. | How the pilot worked, paragraph 7 | It belongs in Results. |
 | RP18 | A table and a footnote that the Word script must leave alone. | The table in Results > Cost per order; the footnote on "deposit" in How the pilot worked, paragraph 3 | No change to either. |
 | RP19 | A bold first sentence in the recommendation. Not a problem: a formatting check. | Recommendation and next steps, paragraph 1 | A rewrite keeps the bold. |
+| RP20 | One linking phrase, "In addition,", opens three paragraphs. Added in 1.1. | Background, paragraph 4; Results > Returns and losses, paragraph 3; Recommendation and next steps, paragraph 4 | Each paragraph leads with its own claim. doc_stats.py lists the repeat, and doc-check reports it. |
+| RP21 | A pointer to "earlier studies" that names no work. Added in 1.1. | Risks and costs of a full rollout, paragraph 4 ("Earlier studies found that washing uses less water than making new boxes.") | Name the source, or cut the claim. A rewrite must not invent a source. |
+| RP22 | A metaphor for what a machine did: the washing station "choked". Added in 1.1. | Results > Returns and losses, paragraph 1 ("On the first Monday, the washing station choked on a whole weekend of returned crates.") | Say in literal words what happened: the station could not keep up with the crates. Add no new fact, such as a delay or a number. |
+| RP23 | A closing comment on what a result means, at the end of a paragraph. Added in 1.1. | Results > Cost per order, paragraph 2 ("This result shows the wider promise of reuse for the whole business.") | Cut it. The recommendation says what the results mean. |
+
+## A limit that must stay
+
+Results > Cost per order, paragraph 3, says that the cost per order would be higher if the crates wear out before 200 uses. A rewrite may split the sentence and cut its filler (RP06, RP07), but it must keep this limit in full. It must not cut it or make it sound less likely.
 
 ## Sentences just over 25 words
 

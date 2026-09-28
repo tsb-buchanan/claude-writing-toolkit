@@ -61,6 +61,7 @@ The time in system $W$ also includes the check itself, so
 \end{equation}
 The library's target concerns the waiting time, not the time in system, because members do not mind the check itself.
 The target is a mean waiting time of less than 3 minutes.
+Earlier studies of public service desks use the same target.
 
 It is worth noting that, for a queue with $N$ desks, the mean waiting time can clearly be obtained from the probability of waiting in Equation~\eqref{eq:erlang2} by dividing it by the spare service capacity $N\mu - \lambda$, as shown in the very well known result \cite{example2021}, which gives
 \begin{equation}
@@ -75,6 +76,8 @@ Little's law links the mean number of borrowers at the desk area to the time in 
   \label{eq:little}
 \end{equation}
 For one desk and $\lambda = 8$ returns per hour, Equation~\eqref{eq:wq} gives $W_q = 0.4/12$ hours, or 2.0 minutes, and the desk area holds about $N = 0.67$ borrowers on average.
+At this load the desk is half asleep.
+This result shows the wider value of queueing models for community services.
 
 \section{A staffing rule}
 \label{sec:rule}

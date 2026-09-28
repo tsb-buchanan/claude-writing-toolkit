@@ -6,6 +6,9 @@
 It also lists, for a person to judge against the profile: each first-person word
 (voice), each number under 10 written in digits, and each number from ten written
 in words. Text inside quotation marks is left out of these two lists.
+Last, it lists each opening that starts three or more paragraphs: a linking phrase
+up to its comma, such as "In addition,", or else the first three words. One rewrite
+prompt run over many sections tends to repeat its openings.
 
 FILE can be Word (.docx), LaTeX (.tex), Markdown (.md) or plain text.
 Paragraphs are counted from 1 in each section or subsection. Headings and tables
@@ -235,6 +238,43 @@ def group_voice(hits, shown=4):
     return lines
 
 
+LINK_WORDS = 4  # a linking phrase has at most this many words before its comma
+OPENING_WORDS = 3
+
+
+def opening_of(para, fmt):
+    """The words a paragraph opens with: a short linking phrase up to its comma, or its first three words."""
+    text = para.replace("**", "").lstrip("*_ ")
+    if fmt == "latex":
+        text = re.sub(r"^(?:\\[A-Za-z]+\*?\s*)+", "", text.replace("~", " "))  # \noindent and the like
+        text = re.sub(r"\$[^$]*\$", "X", text)
+    words = text.split()
+    for i, word in enumerate(words[:LINK_WORDS]):
+        if word.endswith(","):
+            return " ".join(words[:i + 1])
+    return " ".join(words[:OPENING_WORDS]).rstrip(".,;:")
+
+
+def repeated_openings(path, section=None, least=3):
+    """Each opening that starts `least` or more paragraphs, as a line with its places."""
+    fmt, sections = load(path)
+    seen = {}
+    for spath, paras in sections:
+        name = " > ".join(spath)
+        if section and section.lower() not in name.lower():
+            continue
+        for k, para in enumerate(paras, 1):
+            opening = opening_of(para, fmt)
+            key = re.sub(r"[^\w\s,]", "", opening.lower())
+            if key.strip(" ,"):
+                seen.setdefault(key, (opening, []))[1].append("%s, paragraph %d" % (name, k))
+    lines = []
+    for opening, places in sorted(seen.values(), key=lambda v: -len(v[1])):
+        if len(places) >= least:
+            lines.append('"%s" (%d): %s' % (opening, len(places), "; ".join(places)))
+    return lines
+
+
 def main(argv):
     parser = argparse.ArgumentParser(description="Count words, long sentences, banned words and dashes.")
     parser.add_argument("file")
@@ -255,10 +295,12 @@ def main(argv):
     for name, w, s, n_long, rate in rows:
         print("%s | %d | %d | %d | %s" % (name, w, s, n_long, rate))
     voice, numbers = voice_and_numbers(args.file, args.section)
+    openings = repeated_openings(args.file, args.section)
     for title, items in (("long sentences", longs), ("banned words", found),
                          ("dashes", dashes), ("[NEW] marks", new_marks),
                          ("first person, to check against the voice rule", voice),
-                         ("numbers, to check against the number rule", numbers)):
+                         ("numbers, to check against the number rule", numbers),
+                         ("openings that start three or more paragraphs", openings)):
         print("%s: %s" % (title, len(items) if items else "none"))
         for item in items:
             print("  " + item)

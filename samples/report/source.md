@@ -20,7 +20,7 @@ Last year we spent $1.9 million on boxes. The price per box rose by 22% over the
 
 Packaging waste also matters to our customers. Most shoppers now say they would switch to a grocer that uses less packaging. It is very clear that this issue will only become more important going forward.
 
-The company has also set itself a target to halve its packaging waste by 2030. Boxes are by far the largest part of that waste.
+In addition, the company has set itself a target to halve its packaging waste by 2030. Boxes are by far the largest part of that waste.
 
 Several of our competitors already deliver in reusable totes. The idea is simple. The totes go out full and come back empty with the next delivery, and after washing they are used again. A single tote can make hundreds of trips before it wears out.
 
@@ -63,17 +63,17 @@ Over the 12 weeks, the depot delivered 18,900 orders in crates. The packaging co
 | Lost and damaged crates | none | $0.36 |
 | Total | $1.42 | $0.98 |
 
-The cost per order fell a little each month as the washing team got faster. It was $1.05 in September, $0.97 in October and $0.93 in November.
+The cost per order fell a little each month as the washing team got faster. It was $1.05 in September, $0.97 in October and $0.93 in November. This result shows the wider promise of reuse for the whole business.
 
 It is important to note that the price of the crates is basically spread over a working life of 200 uses, which is the figure the supplier gives, and if the crates wear out sooner than that in real use then the cost per order would be higher than the figure in the table.
 
 ### Returns and losses
 
-Customers returned 96% of crates within 30 days, and most came back with the next delivery. The other 4% were counted as lost. The deposits we kept covered a little over half of the cost of replacing them.
+Customers returned 96% of crates within 30 days, and most came back with the next delivery. The other 4% were counted as lost. The deposits we kept covered a little over half of the cost of replacing them. On the first Monday, the washing station choked on a whole weekend of returned crates.
 
 Drivers collected empty crates when they made the customer's next delivery. Customers left the empty crates at the door, and the driver scanned each crate before loading it into the van. Crates that had not come back within 30 days were counted as lost, and the customer's deposit was kept.
 
-Damage was lower than we expected. By the end of the pilot, 3% of crates had cracked sides or broken lids, and the supplier replaced all of them under the supply agreement.
+In addition, damage was lower than we expected. By the end of the pilot, 3% of crates had cracked sides or broken lids, and the supplier replaced all of them under the supply agreement.
 
 ### Customer response
 
@@ -97,7 +97,7 @@ The main risk is loss{emdash}crates that customers keep, throw away or use for s
 
 We can reduce this risk in three ways: raise the deposit, remind customers by text message when a crate is overdue, and collect crates from customers who stop ordering.
 
-The second risk is washing capacity. The leased station at Eastside ran at about 70% of its capacity. The larger depots would need bigger stations or a second washing shift. Washing also uses water: the Eastside station used about 1.2 liters per crate.
+The second risk is washing capacity. The leased station at Eastside ran at about 70% of its capacity. The larger depots would need bigger stations or a second washing shift. Washing also uses water: the Eastside station used about 1.2 liters per crate. Earlier studies found that washing uses less water than making new boxes.
 
 The third risk is the supplier. The pilot used a single supplier, and the supply agreement runs for only two years.
 
@@ -118,6 +118,6 @@ We ask the board to approve this budget at its March meeting.
 
 If the board agrees, the operations team will order the crates in February and install the washing stations in March. The rollout would start at the North depot in April, and the River and Hill depots would follow in May and June. Eastside would keep its crates from the pilot.
 
-The team will also test a crate that folds flat at Eastside from April, to answer the complaints about storage space. We will report the loss rate, the cost per order and customer feedback to the board each month for the first six months.
+In addition, the team will test a crate that folds flat at Eastside from April, to answer the complaints about storage space. We will report the loss rate, the cost per order and customer feedback to the board each month for the first six months.
 
 [^deposit]: The deposit was added to the order total and refunded to the customer's account when the crate was scanned back in at the depot.

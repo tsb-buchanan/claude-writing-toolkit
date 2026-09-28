@@ -116,6 +116,38 @@ class DocStats(unittest.TestCase):
         finally:
             os.unlink(f.name)
 
+    def test_repeated_openings_of_the_samples(self):
+        rp20 = ('"In addition," (3): Background, paragraph 4; Results > Returns and losses, paragraph 3; '
+                'Recommendation and next steps, paragraph 4')
+        for path in (REPORT_MD, REPORT_DOCX):
+            self.assertEqual(doc_stats.repeated_openings(path), [rp20])
+        self.assertEqual(doc_stats.repeated_openings(REPORT_MD, "Results"), [])  # one per section
+        self.assertEqual(doc_stats.repeated_openings(THESIS), [])
+
+    def openings(self, suffix, text, section=None):
+        with tempfile.NamedTemporaryFile("w", suffix=suffix, delete=False, encoding="utf-8") as f:
+            f.write(text)
+        try:
+            return doc_stats.repeated_openings(f.name, section)
+        finally:
+            os.unlink(f.name)
+
+    def test_repeated_openings(self):
+        text = ("## One\n\nIn addition, the first.\n\nThe pilot ran here.\n\nThe results show more.\n\n"
+                "## Two\n\n**In addition,** the second.\n\nThe pilot ran there.\n\nThe results show less.\n\n"
+                "## Three\n\nIn addition, the third.\n\nThe pilot cost less.\n\nThe results show both.\n")
+        self.assertEqual(self.openings(".md", text), [
+            '"In addition," (3): One, paragraph 1; Two, paragraph 1; Three, paragraph 1',
+            '"The results show" (3): One, paragraph 3; Two, paragraph 3; Three, paragraph 3',
+        ])  # "The pilot ran" starts only two paragraphs
+        self.assertEqual(self.openings(".md", text, "Two"), [])
+
+    def test_repeated_openings_in_latex(self):
+        text = ("\\section{One}\n\n\\noindent Taken together, $x$ grows.\n\n"
+                "Taken together, the model holds.\n\nTaken~together, it fits.\n")
+        self.assertEqual(self.openings(".tex", text), ['"Taken together," (3): One, paragraph 1; One, paragraph 2; '
+                                                       'One, paragraph 3'])
+
 
 if __name__ == "__main__":
     unittest.main()
