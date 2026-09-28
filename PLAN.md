@@ -191,7 +191,7 @@ Rules:
 3. The profile fits on one page, about 450 words. Fields that do not apply to the mode are left out.
 4. A rerun reads the current profile, asks what to change and shows a diff.
 5. If the profile comes from an older toolkit version, offer to add the new fields.
-6. Read the headings and at most two pages of the document. Never the whole document.
+6. Use only the headings and a two-page sample of the document. On the web, an upload puts the whole text in the context anyway, so the upload is optional: the writer can type the section names instead.
 
 ### 6.2 human-write
 
@@ -203,7 +203,7 @@ Input:
 2. Claude Code: a file and a section heading or line range. Optional notes.
 3. Optional in both: "light", which fixes only rule breaches (banned words, dashes, number format, voice, spelling) and leaves the sentences otherwise alone.
 
-Reads: the profile, the map, the target section, and the paragraph before and after it. With the standard budget it also reads the rest of the chapter. Never the whole document. Without a map, it works from the section alone and suggests "doc-flow map only".
+Reads: the profile, the map, the target section, and the paragraph before and after it. With the standard budget it also reads the rest of the chapter. It never reads the whole document with a tool. (On the web, the upload itself puts the whole text in the context; see 10.4.) Without a map, it works from the section alone and suggests "doc-flow map only".
 
 Rules:
 
@@ -425,7 +425,7 @@ The budget setting is `lean` or `standard`. The default (`auto`) is lean in repo
 
 1. No subagents, except in doc-check full mode.
 2. One section per human-write run.
-3. human-write reads the map, the section and the paragraph on either side. Never the whole document.
+3. human-write reads the map, the section and the paragraph on either side, never the whole document. On the web, the upload still puts the whole text in the context (10.4).
 4. Outputs are capped (10.2).
 5. Each SKILL.md is at most 900 words, about 1,500 tokens. Each description is under 200 characters, the limit claude.ai's help pages give. That also matters for cost: every installed skill's description is read in every chat. Detail that only some runs need sits in a separate file in the skill folder.
 6. Scripts do the mechanical work. Their code is never read into the context.
@@ -433,6 +433,7 @@ The budget setting is `lean` or `standard`. The default (`auto`) is lean in repo
 8. The document is uploaded to the chat that needs it. It never goes into the Project's knowledge.
 9. No chat preview repeats what the Word file already shows. Empty lists are left out.
 10. Writers install only the skills they use. A business writer skips notation-check.
+11. On the web, the uploaded text is already in the context. Skills get paragraph numbers from `docx_tool.py outline`, and never read the whole file a second time.
 
 ### 10.2 Output caps
 
@@ -459,7 +460,7 @@ The round: doc-flow, then human-write on three sections, then doc-check quick.
 Assumptions:
 
 1. A report of 6,000 words (about 12 pages) in six sections of 1,000 words. With current models one word is about 1.7 tokens, so the report is about 10,000 tokens.
-2. The web, with one new chat per step. The profile sits in the Project's instructions, the map in its knowledge.
+2. The web, with one new chat per step. The profile sits in the Project's instructions, the map in its knowledge. The writer uploads the current Word file to each chat, and claude.ai puts its whole text into the context (the spike confirmed this).
 3. Only the toolkit's own tokens count: skill descriptions, SKILL.md, profile, map, document and output. The fixed overhead of claude.ai or Claude Code is left out.
 4. Each tool call re-reads the chat so far. These re-reads come from the prompt cache, at a tenth of the normal input price or less.
 5. Light thinking: about 1,000 to 2,000 tokens per step.
@@ -468,16 +469,16 @@ Assumptions:
 | Step | New input | Cached re-reads | Output |
 |---|---|---|---|
 | doc-flow: report, moves, map | 13,000 | 75,000 | 4,000 |
-| human-write, three sections | 18,000 | 75,000 | 10,500 |
+| human-write, three sections | 48,000 | 165,000 | 10,500 |
 | doc-check quick | 14,000 | 15,000 | 2,500 |
-| Total | 45,000 | 165,000 | 17,000 |
+| Total | 75,000 | 255,000 | 17,000 |
 
-Result: about $0.30 per round on Sonnet, and about $0.55 on Opus.
+Result: about $0.40 per round on Sonnet, and about $0.70 on Opus.
 
 Notes:
 
-1. Output is more than half of the cost. That is why the skills cap their output and never repeat in the chat what the Word file shows.
-2. If claude.ai puts the whole uploaded file into the context on every upload, each human-write run reads about 10,000 tokens more. That adds about $0.08 per round on Sonnet and $0.14 on Opus. The spike measures this (section 14).
+1. Output is about half of the cost. That is why the skills cap their output and never repeat in the chat what the Word file shows.
+2. The upload is the other large item. Each human-write run reads the whole report (10,000 tokens here), because claude.ai puts the upload's text into the context. For a long document, the writer can copy the section into a new Word file and upload only that. human-write then returns the tracked changes in that small file.
 3. The same round on a 10,000-word thesis chapter in Claude Code, with the standard budget: about $0.60 on Sonnet and $1.10 on Opus. Claude Code's own overhead comes on top. The spike measured about $0.11 per short session on Sonnet, mostly cached reads of Claude Code's own instructions. That makes about $0.50 per round on Sonnet, and somewhat more on Opus.
 4. doc-check full mode on a 70,000-word thesis: roughly $3.50 on Sonnet and $5.50 on Opus (with extraction on Sonnet).
 5. On a claude.ai subscription the writer pays a fixed fee. The same tokens count against the plan's usage limits, so the same savings apply. claude.ai, the desktop app and Claude Code share one limit. Long chats, large files and file creation use it faster. Anthropic's own advice is to start a new chat when a chat gets long.
@@ -523,7 +524,7 @@ How and where:
    5. Fix the structure with doc-flow. Review the tracked changes in Word. Add the map to the Project.
    6. Rewrite one section at a time with human-write.
    7. Check with doc-check before you send.
-   8. Save tokens: a new chat per step, Sonnet by default, one section at a time, the document never in the Project.
+   8. Save tokens: a new chat per step, Sonnet by default, one section at a time, the document never in the Project. For a long document, upload only the section you are working on.
    9. What the skills never do.
    10. When something goes wrong.
 2. The Claude Code guide (docs/claude-code-guide.md): install, /doc-setup, the cycle, the files in doc-notes/, approvals and commits, models and cost, full mode, troubleshooting.
@@ -537,13 +538,13 @@ How and where:
    2. One zip with all five skills, for Claude Code.
    3. web-guide.docx.
 2. Web install: upload each zip under Customize, Skills. A Team or Enterprise owner can upload them once in the organization settings, and they are then on for everyone.
-3. Claude Code install: unzip into .claude/skills/ in the repo, or into ~/.claude/skills/ for all projects. A writer who uploaded the skills on claude.ai may already have them: Claude Code signed in with the same account syncs them. The guide says to install in one place only.
+3. Claude Code install: unzip into .claude/skills/ in the repo, or into ~/.claude/skills/ for all projects. A writer who uploaded the skills on claude.ai may already have them: Claude Code signed in with the same account syncs them, with the prefix `anthropic-skills:` (seen in the spike). The guide says to install in one place only, so there are never two copies with different names.
 4. Later, a Claude Code plugin from this repo: add .claude-plugin/plugin.json and a marketplace file. Writers run `/plugin marketplace add <owner>/<repo>` and then `/plugin install`. The skills are then named like `/<plugin>:human-write`. The profile stays in the writer's repo, so the switch needs no profile change.
-5. Versions: each SKILL.md carries the toolkit version in its metadata, and so does the profile. doc-setup offers to update an older profile.
+5. Versions: each SKILL.md carries the toolkit version in its metadata, and so does the profile. claude.ai shows that version on the skill's page. doc-setup offers to update an older profile.
 
 ## 14. Build order
 
-1. Spike, one day at most, in spike/. Build a tiny test skill with a script. Upload it to claude.ai and install it in Claude Code. Record the results in spike/RESULTS.md. Delete the folder once the shared scripts exist. Confirm:
+1. Spike, one day at most, in spike/. Done on 28 September 2026: every check passed, and the results are in spike/RESULTS.md. Build a tiny test skill with a script. Upload it to claude.ai and install it in Claude Code. Delete the folder once the shared scripts exist. Confirm:
    1. which frontmatter fields claude.ai accepts besides name and description (we need one for the version);
    2. that a bundled script runs on claude.ai and returns a Word file to download;
    3. whether an uploaded Word file's whole text enters the context (this changes 10.4);

@@ -1,24 +1,33 @@
 # Spike results
 
-Build step 1 of PLAN.md, run on 28 September 2026.
-The claude.ai column waits for the test in README.md.
+Build step 1 of PLAN.md, run on 28 September 2026: in Claude Code, and on claude.ai web.
 
 ## The five questions
 
-| Question | Claude Code | claude.ai |
+| Question | Claude Code | claude.ai web |
 |---|---|---|
-| 1. Which frontmatter fields are accepted besides name and description? | all we tried: license, metadata (version) and argument-hint | waiting |
-| 2. Does a bundled script run and return a Word file? | yes | waiting |
-| 3. Does an uploaded Word file's whole text enter the context? | no: files stay in the repo and are read with tools | waiting |
-| 4. Does the Word file itself reach the script, with its comments? | yes | waiting |
-| 5. Do the tracked changes open cleanly? | yes in LibreOffice 24.2; Word waits for the claude.ai test | waiting |
+| 1. Which frontmatter fields are accepted besides name and description? | all we tried: license, metadata (version) and argument-hint | all we tried: zip A uploaded, and the skill page shows the license (MIT) and the version (0.0.1) |
+| 2. Does a bundled script run and return a Word file? | yes | yes, on Python 3.12.3; the file came back from /mnt/user-data/outputs/ |
+| 3. Does an uploaded Word file's whole text enter the context? | no: files stay in the repo and are read with tools | yes: Claude quoted the canary line before it used any tool |
+| 4. Does the Word file itself reach the script, with its comments? | yes | yes: /mnt/user-data/uploads/; all 3 comments found on the right paragraphs |
+| 5. Do the tracked changes open cleanly? | yes, in LibreOffice 24.2 and in Word | yes, in Word: tracked changes, bold and italic words, and comments all shown |
+
+## claude.ai web
+
+1. Zip A (every frontmatter field) uploaded under Customize, Skills. B and C were not needed.
+2. A new chat, outside any Project, with spike-sample.docx attached. The prompt: "Run the docx spike on this file."
+3. Claude found the skill folder at /mnt/skills/plugins/docx-spike and the upload at /mnt/user-data/uploads/. The SKILL.md needed no fixed paths.
+4. The script applied 3 of 3 changes. All three self-checks passed.
+5. The rewrite: "A small group of local volunteers started the cafe to reduce waste in the neighbourhood and to teach basic repair skills to anyone who wanted to learn them." It kept every fact, and Word shows the bold and italic words unchanged.
+6. Not checked yet: which skills Claude opened, and Accept All and Reject All in Word. The script's own checks cover the text. The human-write release test will check both in Word.
 
 ## Claude Code
 
 1. A fresh Claude Code session (version 2.1.283) on Sonnet, with the skill in .claude/skills/. The prompt: "Run the docx spike on spike/dist/spike-sample.docx."
 2. It found the skill, and found the script through `${CLAUDE_SKILL_DIR}`. It read the file, wrote the changes file and applied three changes. All three self-checks passed.
-3. Sonnet's rewrite cut the filler, kept every fact, and kept the bold and italic words.
+3. Sonnet's rewrite cut the filler, kept every fact, and kept the bold and italic words. Word opens the result cleanly.
 4. Cost: 8 model calls in 22 seconds, $0.13 at API list prices. Output was 2,090 tokens, or $0.02. The rest was Claude Code's own instructions, about 40,000 tokens per call, mostly read from the cache.
+5. After the claude.ai upload, the skill also appeared in a running Claude Code session on the same account, as `anthropic-skills:docx-spike`. claude.ai skills sync into Claude Code under that prefix.
 
 ## The script on its own
 
@@ -26,11 +35,15 @@ The claude.ai column waits for the test in README.md.
 2. Self-checks: rejecting all changes gives the original text; accepting all changes gives the requested text; every other part of the file stays the same.
 3. LibreOffice 24.2 opens both results. It finds 13 tracked changes by "Claude" (8 deletions, 5 insertions) and keeps all 3 comments. Bold and italic words keep their formatting.
 
-## Lessons for the real script
+## Lessons for the build
 
-1. Numbering table cells as paragraphs is correct but noisy. The real read command should group the cells under their table.
-2. LibreOffice writes an explicit "Normal" style. The real read command should show it as body text.
-3. Inserted text takes the paragraph's most common formatting. Check this on more documents.
-4. A paragraph that holds a comment cannot be rewritten yet. The real script should keep the comment on the rewritten paragraph.
-5. This container had LibreOffice without its Writer part. Test machines need libreoffice-writer and poppler-utils.
-6. Claude Code's own overhead (about $0.11 per short session on Sonnet) costs more than the skill's output. Section 10.4 of PLAN.md now uses this number.
+1. claude.ai puts the text of an uploaded Word file into the context. Every web chat with an upload pays for the whole document. PLAN.md section 10.4 now counts this.
+2. Because the text is already there, skills on the web get paragraph numbers from a short outline, and never read the whole file a second time.
+3. claude.ai shows `license` and `metadata.version` on the skill page. The toolkit uses both.
+4. Numbering table cells as paragraphs is correct but noisy. The real read command should group the cells under their table.
+5. LibreOffice writes an explicit "Normal" style. The real read command should show it as body text.
+6. Inserted text takes the paragraph's most common formatting. Check this on more documents.
+7. A paragraph that holds a comment cannot be rewritten yet. The real script should keep the comment on the rewritten paragraph.
+8. This container had LibreOffice without its Writer part. Test machines need libreoffice-writer and poppler-utils.
+9. Claude Code's own overhead (about $0.11 per short session on Sonnet) costs more than the skill's output. PLAN.md section 10.4 uses this number.
+10. A writer who uploads the skills on claude.ai and also installs them in a repo gets two copies with different names, for example `human-write` and `anthropic-skills:human-write`. The Claude Code guide must say to use one or the other.
