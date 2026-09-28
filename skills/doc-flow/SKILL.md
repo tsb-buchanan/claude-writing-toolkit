@@ -26,7 +26,7 @@ Files named below are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude Code
    1. A Word file on claude.ai: its text is already in the chat. Run `python3 scripts/docx_tool.py outline FILE` for paragraph numbers and comments.
    2. A Word file in Claude Code: `python3 scripts/docx_tool.py read FILE`.
    3. LaTeX, Markdown or text: read the file.
-5. `python3 scripts/doc_stats.py FILE --limit N --banned "WORDS"`, with the profile's sentence limit and words to cut. It gives words and long sentences per section.
+5. `python3 scripts/doc_stats.py FILE --limit N --banned "WORDS"`, with the profile's sentence limit and words to cut.
 
 "doc-flow map only": skip to section 4.
 
@@ -34,7 +34,7 @@ Files named below are in this skill's folder (${CLAUDE_SKILL_DIR} in Claude Code
 
 The cap is 600 words, or 1,200 with `budget: standard`. `budget: auto` is standard for a thesis in Claude Code, and lean otherwise. Give one line per finding. Leave out a heading with nothing to report.
 
-1. Main message (a thesis chapter: its claim): quote it, with its place. If it comes later than the profile's opening rule asks, propose a move that brings it forward: its paragraph, or its whole section. Only if neither can move, flag it for human-write, which can restate it up front.
+1. Main message (a thesis chapter: its claim): quote it, with its place. If it comes later than the profile's opening rule asks, propose a move that brings it forward: its paragraph, or its whole section. Only if neither can move, flag it for human-write.
 2. Sections that do not move toward the main message: one line each, with the section's job.
 3. Repetition: where, and which place should keep it, and why.
 4. Handoffs: each opening or closing line that points to another section. Is it right?
@@ -42,7 +42,7 @@ The cap is 600 words, or 1,200 with `budget: standard`. `budget: auto` is standa
 6. House rules: check each one against every paragraph. Report a borderline case, and say what it turns on.
 7. Numbers that differ between sections. Report them, and fix neither. The writer decides.
 8. Length: the sections over their target, and cuts with the words each saves.
-9. Long sentences: the rate per section, from doc_stats.py. Name the worst sections for human-write.
+9. Long sentences: the rate per section, from doc_stats.py, and the worst sections for human-write.
 10. The writer's notes: applied, or why not.
 11. Proposed moves, numbered. Each names what moves, and where to. If the moves change the order, add the new outline, one line per section.
 
@@ -58,7 +58,7 @@ End with: "Reply with the moves you approve (for example 1, 3), all, or none."
 2. Before you cut a duplicate, check that each fact in it survives elsewhere: `python3 scripts/check_protected.py FILE DRAFT` must list no number as "no longer anywhere in the text".
 3. List each removed passage, and where its content now is.
 4. A Word file, a PDF or pasted text, in either place: follow word-output.md. Use "move" for a move, "delete" for a cut, and "insert_after" with a heading style for a new heading.
-5. LaTeX, Markdown or text in Claude Code: follow text-output.md, but do not commit yet.
+5. LaTeX, Markdown or text, in either place: follow text-output.md. In Claude Code, stop after the diff and wait for a second approval. Then write the file, but commit only after the map.
 
 If the writer approves no moves, go to section 4.
 
@@ -75,4 +75,4 @@ In Claude Code: write doc-notes/doc-map.md. Unless the profile says commit: no, 
 
 Before you say a file is written, check that the command worked.
 
-End with one line: the section with the most long sentences, for human-write, or doc-check to check the whole document.
+End with one line: human-write on the section with the most long sentences, or doc-check.

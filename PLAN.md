@@ -1,6 +1,6 @@
 # PLAN
 
-Status: approved on 28 September 2026. Nothing is built yet.
+Status: approved on 28 September 2026. Build steps 1 to 11 were done on the same day in Claude Code (section 14). The claude.ai tests and the releases wait for the writer.
 This plan replaces the earlier plan, which built slash commands for Claude Code only.
 
 ## 1. Goal
@@ -338,7 +338,7 @@ Stage 3: apply approved fixes only. This is the only skill that may change symbo
 | | Web | Claude Code |
 |---|---|---|
 | Symbol table | a notation.md file to download and add to the Project's knowledge | doc-notes/notation.md |
-| Fixes | corrected copies of the uploaded LaTeX or Markdown files, and the list; symbols inside Word equations are listed for the writer to change by hand | a draft copy, a diff, approval, the files, one commit |
+| Fixes | corrected copies of the uploaded LaTeX or Markdown files, and the list; symbols inside Word equations are listed for the writer to change by hand | the writer approves the numbered fixes; then a diff, the files, one commit |
 
 ## 7. The profile, field by field
 
@@ -491,7 +491,7 @@ Notes:
 1. Output is about half of the cost. That is why the skills cap their output and never repeat in the chat what the Word file shows.
 2. The upload is the other large item. Each human-write run reads the whole report (10,000 tokens here), because claude.ai puts the upload's text into the context. For a long document, the writer can copy the section into a new Word file and upload only that. human-write then returns the tracked changes in that small file.
 3. The same round on a 10,000-word thesis chapter in Claude Code, with the standard budget: about $0.60 on Sonnet and $1.10 on Opus. Claude Code's own overhead comes on top. The spike measured about $0.11 per short session on Sonnet, mostly cached reads of Claude Code's own instructions. That makes about $0.50 per round on Sonnet, and somewhat more on Opus.
-4. doc-check full mode on a 70,000-word thesis: roughly $3.50 on Sonnet and $5.50 on Opus (with extraction on Sonnet).
+4. doc-check full mode: on the short samples (1,100 to 1,700 words) it cost $2.30 to $3.40 on Opus, mostly the subagents' own start-up. By the skill's formula, $3 plus $0.10 per 1,000 words on Opus, a 70,000-word thesis comes to about $10 on Opus and about $6 on Sonnet. That is an estimate, not yet measured.
 5. On a claude.ai subscription the writer pays a fixed fee. The same tokens count against the plan's usage limits, so the same savings apply. claude.ai, the desktop app and Claude Code share one limit. Long chats, large files and file creation use it faster. Anthropic's own advice is to start a new chat when a chat gets long.
 
 ## 11. Test plan
@@ -555,7 +555,7 @@ How and where:
 
 ## 14. Build order
 
-1. Spike, one day at most, in spike/. Done on 28 September 2026: every check passed, and the results are in spike/RESULTS.md. Build a tiny test skill with a script. Upload it to claude.ai and install it in Claude Code. Delete the folder once the shared scripts exist. Confirm:
+1. Spike, one day at most, in spike/. Done on 28 September 2026: every check passed, and the results are in tests/results/0.0-spike.md. The spike/ folder is deleted. Build a tiny test skill with a script. Upload it to claude.ai and install it in Claude Code. Delete the folder once the shared scripts exist. Confirm:
    1. which frontmatter fields claude.ai accepts besides name and description (we need one for the version);
    2. that a bundled script runs on claude.ai and returns a Word file to download;
    3. whether an uploaded Word file's whole text enters the context (this changes 10.4);
@@ -568,8 +568,8 @@ How and where:
 6. doc-flow and the map. Test human-write again, now with a map. Done on 28 September 2026: doc-flow passed in Claude Code on both samples, in Word, Markdown and LaTeX, and so did "map only" (tests/results/0.1-dev.md). Open point: its reports on the report sample run to about 800 words, against the lean cap of 600. The claude.ai run waits for the release test.
 7. doc-check quick. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
 8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs. The guide, the README, the release build and the workflows were done on 28 September 2026. The release itself waits for the claude.ai tests, because CLAUDE.md asks for a test on the web before any release.
-9. doc-check full mode.
-10. notation-check.
+9. doc-check full mode. Done on 28 September 2026: it passed in Claude Code on Opus on both samples, twice each (tests/results/0.1-dev.md).
+10. notation-check. Done on 28 September 2026: it passed in Claude Code on the sample thesis, and stopped in report mode (tests/results/0.1-dev.md). Open point: it did not find $W$ used before its definition (TH04). The claude.ai run waits for the release test.
 11. The Claude Code guide, a full release test, and release v1.0.
 12. Later: the plugin.
 

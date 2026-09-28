@@ -3,6 +3,10 @@
 
   doc_stats.py FILE [--limit 25] [--banned "very, basically"] [--section NAME]
 
+It also lists, for a person to judge against the profile: each first-person word
+(voice), each number under 10 written in digits, and each number from ten written
+in words. Text inside quotation marks is left out of these two lists.
+
 FILE can be Word (.docx), LaTeX (.tex), Markdown (.md) or plain text.
 Paragraphs are counted from 1 in each section or subsection. Headings and tables
 do not count. A LaTeX display equation stays part of the sentence around it.
@@ -178,6 +182,59 @@ def stats(path, limit=25, banned=(), section=None):
     return fmt, rows, longs, found, dashes, new_marks
 
 
+FIRST_PERSON = re.compile(r"\b(I|we|We|our|Our|us|my|My|me|ours|Ours)\b")
+QUOTED = re.compile(r'"[^"]*"|\u201c[^\u201d]*\u201d|``.*?\'\'')
+REFERENCE_WORDS = ("section", "chapter", "table", "figure", "equation", "page", "paragraph", "clause",
+                   "step", "part", "appendix", "item", "phase", "stage", "version", "level", "day", "week")
+SMALL_DIGIT = re.compile(r"(?<![\w.,$\u00a3\u20ac/:#-])([1-9])(?![\w.,%/:-])\s+([A-Za-z][\w-]*)")
+BIG_WORD = re.compile(r"\b(ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|"
+                      r"twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)(-\w+)?\s+([A-Za-z][\w-]*)",
+                      re.I)
+
+
+def prose_only(para, fmt):
+    """The paragraph without math, citations, references and quotations."""
+    text = re.sub(r"\$[^$]*\$", " ", para) if fmt == "latex" else para
+    text = LATEX_DROP.sub(" ", text)
+    return QUOTED.sub(" ", text)
+
+
+def voice_and_numbers(path, section=None):
+    """(first-person words, number-format cases), each as lines with their place."""
+    fmt, sections = load(path)
+    voice, numbers = [], []
+    for spath, paras in sections:
+        name = " > ".join(spath)
+        if section and section.lower() not in name.lower():
+            continue
+        for k, para in enumerate(paras, 1):
+            where = "%s, paragraph %d" % (name, k)
+            text = prose_only(para, fmt)
+            for m in FIRST_PERSON.finditer(text):
+                after = text[m.end():].split()
+                word = m.group(1) if m.group(1) == "I" else m.group(1).lower()
+                voice.append((word, where, ("%s %s" % (m.group(1), after[0] if after else "")).strip()))
+            for m in SMALL_DIGIT.finditer(text):
+                before = text[:m.start()].split()[-1:] or [""]
+                if before[0].lower().strip("~(") in REFERENCE_WORDS:
+                    continue
+                numbers.append('%s: digit under 10: "%s %s"' % (where, m.group(1), m.group(2)))
+            for m in BIG_WORD.finditer(text):
+                numbers.append('%s: word for 10 or more: "%s"' % (where, m.group(0)))
+    return group_voice(voice), numbers
+
+
+def group_voice(hits, shown=4):
+    """One line per first-person word: its count, and its first places."""
+    lines = []
+    for word in sorted(set(h[0] for h in hits), key=lambda w: -sum(1 for h in hits if h[0] == w)):
+        mine = [h for h in hits if h[0] == word]
+        places = "; ".join('%s ("%s")' % (where, snippet) for _, where, snippet in mine[:shown])
+        more = " and %d more" % (len(mine) - shown) if len(mine) > shown else ""
+        lines.append("%s: %d, in %s%s" % (word, len(mine), places, more))
+    return lines
+
+
 def main(argv):
     parser = argparse.ArgumentParser(description="Count words, long sentences, banned words and dashes.")
     parser.add_argument("file")
@@ -197,8 +254,11 @@ def main(argv):
     print("section | words | sentences | over limit | rate")
     for name, w, s, n_long, rate in rows:
         print("%s | %d | %d | %d | %s" % (name, w, s, n_long, rate))
+    voice, numbers = voice_and_numbers(args.file, args.section)
     for title, items in (("long sentences", longs), ("banned words", found),
-                         ("dashes", dashes), ("[NEW] marks", new_marks)):
+                         ("dashes", dashes), ("[NEW] marks", new_marks),
+                         ("first person, to check against the voice rule", voice),
+                         ("numbers, to check against the number rule", numbers)):
         print("%s: %s" % (title, len(items) if items else "none"))
         for item in items:
             print("  " + item)

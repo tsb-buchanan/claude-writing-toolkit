@@ -12,8 +12,9 @@ Every change comes back to you as tracked changes in a copy of your Word file. Y
 2. doc-flow checks the structure of the whole document, moves sections after you agree, and writes a one-page document map.
 3. human-write rewrites one section at a time in your style.
 4. doc-check lists the top 10 issues before you send the document. It never changes anything.
+5. notation-check, for a thesis only, keeps the math symbols the same across chapters.
 
-The usual order: doc-setup once, then doc-flow, then human-write on each section that needs it, then doc-check.
+The usual order: doc-setup once, then doc-flow, then human-write on each section that needs it, then doc-check. A thesis also gets notation-check before each milestone.
 
 ## What you need
 
@@ -25,7 +26,7 @@ The usual order: doc-setup once, then doc-flow, then human-write on each section
 ## Step 1: install the skills
 
 1. Open the toolkit's Releases page: https://github.com/tsb-buchanan/claude-writing-toolkit/releases
-2. Under the latest version, download doc-setup.zip, doc-flow.zip, human-write.zip and doc-check.zip.
+2. Under the latest version, download doc-setup.zip, doc-flow.zip, human-write.zip and doc-check.zip. For a thesis with math, also download notation-check.zip.
 3. In claude.ai, open Customize, then Skills.
 4. Upload each zip file, one at a time. Do not unzip them first.
 5. Check that each skill is switched on.
@@ -99,6 +100,19 @@ Some paragraphs cannot be changed safely in a Word file: tables, footnotes, equa
 3. doc-check never changes your document.
 
 [Screenshot 7: a doc-check list in the chat]
+
+doc-check also has a full mode, a deeper check with many parallel steps. It runs only in Claude Code, the version of Claude for the command line. On claude.ai, doc-check offers its quick check instead.
+
+## For a thesis: keep the symbols consistent with notation-check
+
+notation-check works on LaTeX or Markdown files. It lists every symbol, keeps a table of what each one means, and finds a quantity with two symbols, a symbol with two meanings, and a symbol used before it is defined.
+
+1. Start a new chat in the Project. Upload the chapter files, including the chapter your profile names as the notation source. Type: Use notation-check.
+2. Read the report. It ends with a numbered list of fixes.
+3. Reply with the fixes you want, such as "1, 2", or "all", or "none".
+4. Claude gives you corrected copies of the changed files, a list of each change, and notation.md, the symbol table. Add notation.md to the Project's knowledge. If an older one is there, remove it.
+
+notation-check changes symbols only, and only inside math. A missing definition needs words, so it leaves that to you or to human-write. It cannot change a symbol inside an equation in a Word file: it lists those for you to change by hand. From a PDF it can give a report, but no fixes.
 
 ## Your notes and keep marks
 

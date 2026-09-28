@@ -63,3 +63,12 @@ The model's numbers follow from the equations with $\mu = 20$ returns per hour:
 4. With $\mu = 15$, one desk meets the target only below about 6 returns per hour.
 
 A check that reports one of these as wrong has made a mistake.
+
+## Slips found later
+
+These were not planted. The full check found them. A check that reports them is right, and a test counts them as correct findings.
+
+| Where | Slip |
+|---|---|
+| 3.6, paragraph 1 | "The next chapter extends the model ..." The sample holds only Chapters 2 and 3, so there is no next chapter. This comes from cutting the sample out of a larger thesis. |
+| 3.5 and 3.6 | "Two desks up to about 28" is a prediction of the model. The desk logs never go above 22 returns an hour. |

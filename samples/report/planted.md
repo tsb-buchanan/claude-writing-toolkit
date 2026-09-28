@@ -52,3 +52,14 @@ These are not planted, but a check will find them. A rewrite may keep each one w
 18,400 and 18,900 orders (report both, fix neither), 84% and 81% (the same), 1,500 orders a day, four depots, $1.9 million, 22%, 2030, $61,000, 225 orders a day, 4,200 crates, $9.50, $5, Clause 7.2, 30 days, 2%, 3%, $1.42, $0.98, 31%, $0.10, $0.52, $0.36, $1.05, $0.97, $0.93, 200 uses, 96%, 4%, 1,140 customers, 12%, 7%, 40 seconds, 28 stops, 19 minutes, 28,000 crates, 70%, 1.2 liters, $304,000, $266,000, $30,000, $8,000, $0.44, $19,800, 15 months, 8%.
 
 Only their format may change, and only to meet the number rule. Numbers inside the keep passage never change.
+
+## Slips found later
+
+These were not planted. The full check found them in the invented numbers. A check that reports them is right, and a test counts them as correct findings.
+
+| Where | Slip |
+|---|---|
+| Background, paragraph 2 | $1.9 million a year on boxes does not fit 1,500 orders a day at $1.42 per order. That gives about $777,000. |
+| Risks and costs of a full rollout, paragraph 1; Recommendation and next steps, paragraph 3 | 28,000 crates is enough for all four depots (4,200 / 225 x 1,500), yet Eastside keeps its crates from the pilot. |
+| Recommendation and next steps, paragraphs 2 and 3 | The crates are ordered in February, before the board approves the money in March. |
+| Results > Cost per order, paragraph 3 | The 200-use life that the 31% rests on has no named source. |

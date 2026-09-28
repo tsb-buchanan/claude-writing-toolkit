@@ -29,7 +29,10 @@ COPIES = {
     "shared/doc_stats.py": ["skills/human-write/scripts/doc_stats.py", "skills/doc-flow/scripts/doc_stats.py",
                             "skills/doc-check/scripts/doc_stats.py"],
     "shared/word-output.md": ["skills/human-write/word-output.md", "skills/doc-flow/word-output.md"],
-    "shared/text-output.md": ["skills/human-write/text-output.md", "skills/doc-flow/text-output.md"],
+    "shared/text-output.md": ["skills/human-write/text-output.md", "skills/doc-flow/text-output.md",
+                              "skills/notation-check/text-output.md"],
+    "shared/word_diff.py": ["skills/human-write/scripts/word_diff.py", "skills/doc-flow/scripts/word_diff.py",
+                            "skills/notation-check/scripts/word_diff.py"],
 }
 
 

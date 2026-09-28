@@ -1,4 +1,2 @@
-# Built spike files (zips and sample documents): rebuild with python3 spike/build.py
-spike/dist/
 __pycache__/
 dist/

@@ -92,6 +92,21 @@ class DocStats(unittest.TestCase):
         self.assertEqual(len(dashes), 1)
         self.assertIn('Checking the model against the desk logs, paragraph 1: en dash written "--" (1)', dashes[0])
 
+    def test_voice_and_number_lists_of_the_report(self):
+        voice, numbers = doc_stats.voice_and_numbers(REPORT_MD)
+        i_line = [v for v in voice if v.startswith("I: ")]
+        self.assertEqual(len(i_line), 1)
+        self.assertIn("Customer response", i_line[0])  # RP16
+        self.assertTrue(any('"twelve weeks"' in n for n in numbers))  # RP15
+        self.assertTrue(any('"3 staff"' in n for n in numbers))  # RP15
+        self.assertFalse(any("twenty" in n for n in numbers))  # inside the quoted clause (RP13)
+
+    def test_voice_and_number_lists_of_the_thesis(self):
+        voice, numbers = doc_stats.voice_and_numbers(THESIS)
+        self.assertTrue(any(v.startswith("we: 3,") for v in voice))  # TH07
+        self.assertTrue(any(v.startswith("our: 1,") for v in voice))  # TH07
+        self.assertTrue(any('"2 desks"' in n for n in numbers))  # TH14
+
     def test_new_marks(self):
         with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False, encoding="utf-8") as f:
             f.write("## One\n\n[NEW] A new sentence. An old one.\n\n## Two\n\nNothing new here.\n")

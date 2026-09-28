@@ -47,7 +47,7 @@ The rules, most important first:
 The draft is the edited copy from text-output.md, or the tracked copy from word-output.md. For a tracked copy, the apply step runs the first check.
 
 1. `python3 scripts/check_protected.py FILE DRAFT`
-2. `python3 scripts/doc_stats.py DRAFT --section "NAME" --limit N --banned "WORDS"`, with the profile's sentence limit and words to cut.
+2. `python3 scripts/doc_stats.py DRAFT --section "NAME" --limit N --banned "WORDS"`, with the profile's sentence limit and words to cut. Judge its first-person words and numbers against the profile's voice and number rules.
 3. In LaTeX, note what each symbol in the section stands for. A symbol that stands for two things is a flag for notation-check.
 4. Ask of each paragraph: does it do this section's job? A section on method or background should not report results. Flag each paragraph that does another section's job.
 5. Fix everything the scripts report, or list it.
@@ -65,6 +65,6 @@ Give these lists, one line per item, with no em dashes. Leave out an empty list.
 ## 5. Show the change, then write it after approval
 
 1. A Word file, a PDF or pasted text, in either place: follow word-output.md. The writer gets a copy with the rewrite as tracked changes, plus the lists.
-2. LaTeX, Markdown or text in Claude Code: follow text-output.md. The commit message is "human-write: SECTION".
+2. LaTeX, Markdown or text, in either place: follow text-output.md. In Claude Code, the commit message is "human-write: SECTION".
 
 End with one line: the next section to rewrite, or doc-check to check the whole document.
