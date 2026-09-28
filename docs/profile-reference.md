@@ -13,7 +13,7 @@ Two filled-in examples: samples/report/doc-profile.md and samples/thesis/doc-pro
 
 ## Format
 
-1. The first line after the title gives the toolkit version, for example `toolkit: 0.1`.
+1. The first line after the title gives the toolkit version, for example `toolkit: 1.0`.
 2. The profile has four parts: Document, Style guide, Thesis and Claude Code.
 3. Document, Thesis and Claude Code hold `key: value` lines. A list is numbered, one item per line.
 4. The style guide holds numbered rules in plain words. Each rule starts with a label, such as "Voice:". The skills find a rule by its label.

@@ -3,7 +3,7 @@ name: notation-check
 description: Thesis only. Lists every math symbol, keeps a symbol table, reports variants, clashes and symbols used before they are defined, and fixes approved symbols in equations.
 license: MIT
 metadata:
-  version: "0.1"
+  version: "1.0"
 ---
 
 # notation-check
@@ -32,7 +32,7 @@ Build the table, or update the one you have. One row per quantity:
 
 ```
 # Notation
-toolkit: 0.1
+toolkit: 1.0
 written: YYYY-MM-DD
 source: the profile's notation source
 

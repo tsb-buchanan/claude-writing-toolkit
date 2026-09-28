@@ -1,5 +1,5 @@
 # Writing profile
-toolkit: 0.1
+toolkit: 1.0
 
 ## Document
 

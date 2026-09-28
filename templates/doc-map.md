@@ -15,7 +15,7 @@ How doc-flow writes the document map. human-write and doc-check read the map ins
 
 ```
 # Document map
-toolkit: 0.1
+toolkit: 1.0
 written: YYYY-MM-DD
 document: FILE NAME OR TITLE
 
@@ -41,7 +41,7 @@ Stated in: SECTION, paragraph N.
 
 ```
 # Document map
-toolkit: 0.1
+toolkit: 1.0
 document: THESIS TITLE
 
 ## Chapter N: TITLE
@@ -67,7 +67,7 @@ Every name and number below is made up.
 
 ```
 # Document map
-toolkit: 0.1
+toolkit: 1.0
 written: 2026-03-02
 document: pool-hours-review.docx
 

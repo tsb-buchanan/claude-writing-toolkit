@@ -3,7 +3,7 @@ name: doc-check
 description: Read-only. Checks a report or a thesis chapter against a fixed checklist and lists the top 10 issues, each with a next step. Run it before the document goes out.
 license: MIT
 metadata:
-  version: "0.1"
+  version: "1.0"
 ---
 
 # doc-check

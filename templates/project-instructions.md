@@ -3,5 +3,5 @@ This Project uses the writing toolkit skills.
 Follow the writing profile below in every skill run, and in any text you write in this Project.
 
 # Writing profile
-toolkit: 0.1
+toolkit: 1.0
 (the rest of the profile)

@@ -3,7 +3,7 @@ name: doc-flow
 description: Reviews the structure of a report or one thesis chapter, applies the moves the writer approves, and writes a one-page document map. "doc-flow map only" writes just the map.
 license: MIT
 metadata:
-  version: "0.1"
+  version: "1.0"
 ---
 
 # doc-flow

@@ -544,7 +544,7 @@ How and where:
 
 ## 13. Distribution
 
-1. GitHub Releases. A version tag (for example v0.1.0) starts release.yml. It builds:
+1. GitHub Releases. A version tag (for example v1.0.0) starts release.yml. It builds:
    1. One zip per skill, for claude.ai. Each holds one skill folder, named exactly like the skill, with its SKILL.md inside.
    2. One zip with all five skills, for Claude Code.
    3. web-guide.docx.
@@ -567,7 +567,7 @@ How and where:
 5. human-write. Done on 28 September 2026: it passed in Claude Code on both samples, in Word, Markdown and LaTeX (tests/results/0.1-dev.md). One open point: it does not flag a result in a method section, so doc-flow must. The claude.ai run waits for the release test.
 6. doc-flow and the map. Test human-write again, now with a map. Done on 28 September 2026: doc-flow passed in Claude Code on both samples, in Word, Markdown and LaTeX, and so did "map only" (tests/results/0.1-dev.md). Open point: its reports on the report sample run to about 800 words, against the lean cap of 600. The claude.ai run waits for the release test.
 7. doc-check quick. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
-8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs. The guide, the README, the release build and the workflows were done on 28 September 2026. The release itself waits for the claude.ai tests, because CLAUDE.md asks for a test on the web before any release.
+8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs. Because every step was done on the same day, v0.1 was folded into v1.0. The guide, the README, the release build and the workflows were done on 28 September 2026. The release itself waits for the claude.ai tests, because CLAUDE.md asks for a test on the web before any release.
 9. doc-check full mode. Done on 28 September 2026: it passed in Claude Code on Opus on both samples, twice each (tests/results/0.1-dev.md).
 10. notation-check. Done on 28 September 2026: it passed in Claude Code on the sample thesis, and stopped in report mode (tests/results/0.1-dev.md). Open point: it did not find $W$ used before its definition (TH04). The claude.ai run waits for the release test.
 11. The Claude Code guide, a full release test, and release v1.0. The guide and the release test were done on 28 September 2026: the Claude Code part by Claude, and the claude.ai part (tests/web-test.md) by the writer (tests/results/0.1-dev.md). The release waits for the writer's go-ahead.

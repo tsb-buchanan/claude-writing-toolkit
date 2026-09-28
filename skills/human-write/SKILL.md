@@ -3,7 +3,7 @@ name: human-write
 description: Rewrites one section of a thesis or report in the writer's style, and shows every change for approval. Numbers, facts, citations and equations never change.
 license: MIT
 metadata:
-  version: "0.1"
+  version: "1.0"
 ---
 
 # human-write

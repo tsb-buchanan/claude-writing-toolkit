@@ -6,7 +6,7 @@ Leave out any section or field that does not apply. Delete the comments when you
 -->
 # Writing profile
 <!-- The toolkit version this profile was written for. doc-setup offers to update an older profile. -->
-toolkit: 0.1
+toolkit: 1.0
 
 ## Document
 
