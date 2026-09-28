@@ -1,364 +1,580 @@
 # PLAN
 
-Status: draft for approval. Nothing is built yet.
+Status: approved on 28 September 2026. Nothing is built yet.
+This plan replaces the earlier plan, which built slash commands for Claude Code only.
 
 ## 1. Goal
 
-A toolkit that helps one writer take a long document from a rough draft to a clean draft with Claude Code.
-The writer decides what the document says. The tools apply the writer's decisions and catch what a human eye misses across many pages: a symbol that drifts, a paragraph said twice, a broken handoff, a pronoun that breaks the voice rule.
-Every tool shows its changes before it writes them.
+A small set of Claude Skills that help one writer turn a rough draft of a long document into a clear one.
+The writer decides what the document says. The skills apply the writer's rules, fix structure and style, and catch what a tired eye misses.
+Every skill shows its changes before anything is written.
+Every skill works on claude.ai (web and desktop app) and in Claude Code.
 
 The toolkit has four parts:
 
-1. Commands: four slash commands, plus a setup command.
-2. A profile: project_profile.md, the one file that holds everything specific to one project.
-3. Templates: the working notes the commands read and write.
-4. Docs: a tutorial that walks a writer through a full editing cycle.
+1. Five skills: doc-setup, human-write, doc-flow, doc-check and notation-check.
+2. The profile: one page per writer, with their settings and style guide. It is the only place for anything specific to one writer.
+3. The document map: one page per document (or per thesis chapter), written by doc-flow. Other skills read it instead of the whole document.
+4. Docs: a web guide (a Word document), a Claude Code guide and a five-line README.
 
-## 2. Repo layout
+## 2. Users and modes
+
+Two first users. One set of skills serves both.
+
+1. A PhD student who writes a thesis: chapters, supervisor rules, notation, papers inside chapters. Works mostly in Claude Code, sometimes on the web. Can afford larger checks.
+2. A business writer who writes reports on claude.ai. Not technical. Small token budget. Needs human-write, doc-flow and a light doc-check.
+
+The profile setting `mode: thesis | report` switches defaults and turns thesis-only features on or off.
+
+| | thesis | report |
+|---|---|---|
+| The parts are called | chapters | sections |
+| notation-check | on | off |
+| Papers inside chapters | on | off |
+| doc-check full mode | suggested before a milestone | not suggested, still available on request |
+| Token budget | standard in Claude Code, lean on the web | lean |
+| Style and structure defaults | see section 7 | see section 7 |
+
+## 3. How the pieces fit
+
+The profile says how the writer wants to write. The map says what the document says. The skills read both.
+
+A typical cycle:
+
+1. doc-setup, once. The interview writes the profile.
+2. doc-flow on the document (a thesis: one chapter at a time). Structure first, then the map.
+3. human-write, one section per run.
+4. doc-check quick before the document goes out. A thesis also gets notation-check and doc-check full before a milestone.
+
+Where things live:
+
+| Thing | Web (claude.ai) | Claude Code |
+|---|---|---|
+| Skills | uploaded once under Customize, Skills; a Team or Enterprise owner can add them for everyone | .claude/skills/ in the repo, or ~/.claude/skills/ |
+| Profile | the Project's instructions | doc-profile.md at the repo root |
+| Map | a file in the Project's knowledge | doc-notes/doc-map.md |
+| The document | uploaded to the chat when a step needs it (Word or PDF), or pasted | files in the repo (LaTeX, Markdown, text or Word) |
+| The writer's notes | the chat message, or comments in the Word file | doc-notes/notes.md, or comments in the source |
+| Keep marks | a Word comment that starts with "keep" | `% keep` and `% end keep` (LaTeX), `<!-- keep -->` and `<!-- end keep -->` (Markdown) |
+| Plans and reports | the chat | doc-notes/plans/ and doc-notes/checks/ |
+| Symbol table (thesis) | a file in the Project's knowledge | doc-notes/notation.md |
+| Changes | a Word file with tracked changes | a diff, then the file, then a commit |
+
+The profile and the map belong in the Project: every chat needs them, and they are short.
+The document itself does not. A copy there goes out of date after each round of changes, and everything in the Project's knowledge is read in every chat.
+Instead, the writer uploads the current version to each chat that needs it.
+
+## 4. Repo layout
 
 ```
-claude-thesis-toolkit/
+claude-writing-toolkit/
+  README.md                     five lines: what it is, how to start
   CLAUDE.md
   PLAN.md
-  README.md                  what this is, install in five steps, link to the tutorial
   LICENSE
-  commands/
-    doc_check.md             whole-document read-only check (generic thesis_check)
-    notation_check.md        notation table, report, approved replacements
-    chapter_flow.md          one unit: flow report, plan, structural moves
-    human_write.md           one section: strict rewrite pass
-    setup_profile.md         interview that writes or updates the profile
+  skills/                       what users install
+    doc-setup/
+      SKILL.md
+      profile-template.md       read when the profile is written
+      thesis-questions.md       extra interview questions, read in thesis mode only
+    human-write/
+      SKILL.md
+      word-output.md            how to return tracked changes; read only for Word output
+      scripts/                  copies of shared/ scripts
+    doc-flow/
+      SKILL.md
+      map-template.md
+      word-output.md
+      scripts/
+    doc-check/
+      SKILL.md                  quick mode
+      full-mode.md              read only in full mode
+      scripts/
+    notation-check/
+      SKILL.md
+      scripts/symbols.py        lists every symbol in the math, with place and context
+  shared/                       the one source for files that several skills need
+    docx_tool.py                reads Word files and writes tracked changes
+    check_protected.py          compares numbers, citations and math before and after
+    doc_stats.py                words, long sentences, banned words and dashes per section
+    word-output.md
   templates/
-    project_profile.md       the profile, every field with a one-line comment
-    writing_style.md         default style guide, with three voice variants
-    reading_notes.md         one heading per unit, one note per line
-    message_map.md           the document's claim and each unit's job
-    notation_table.md        one row per quantity
-    decisions_log.md         dated decisions the commands must respect
-    session_log.md           one entry per command run that writes a file
-    claude_md_snippet.md     lines to add to the user's own CLAUDE.md
-  setup/
-    SETUP_PROMPT.md          paste-in prompt: install files, then run the interview
+    doc-profile.md              blank profile with a comment on every field
+    doc-map.md                  the map format, with an invented example
+    project-instructions.md     what to paste into a Claude Project
+    claude-md-snippet.md        two lines for the writer's own CLAUDE.md
   docs/
-    tutorial.md              the full editing cycle, step by step
-    install.md               manual install and update
-    profile_reference.md     every profile field, its effect, and which commands read it
-    customizing.md           how to add a mark, a rule or a check without editing commands
-  examples/
-    sample_doc/              a short invented document for testing the commands
+    web-guide.md                source of the Word guide; each release builds web-guide.docx
+    claude-code-guide.md
+    profile-reference.md        every field, its defaults per mode, which skills read it
+  samples/
+    report/                     invented report (.docx, .pdf, .md) and planted.md
+    thesis/                     invented chapter (.tex, .pdf), a stub of the chapter before it, planted.md
+  tests/
+    expected/                   what each skill must find, change and leave alone, per sample
+    results/                    one file per release test
+    test_docx_tool.py
+    test_check_protected.py
+    test_doc_stats.py
+    test_symbols.py
+  tools/
+    sync_shared.py              copies shared/ files into the skills; fails if a copy differs
+    check_repo.py               dash check, SKILL.md size and frontmatter, copies in sync
+    build_release.py            one zip per skill, one zip with all skills, the Word guide
+  .github/workflows/
+    checks.yml                  runs check_repo.py and the tests on every push
+    release.yml                 on a version tag, builds the release files and attaches them
 ```
 
-What goes into the user's repo after setup (default paths, all set in the profile):
+What a Claude Code writer's repo holds after setup:
 
 ```
-<user repo>/
-  project_profile.md         fixed path, so every command can find it
-  CLAUDE.md                  gets the snippet appended
-  .claude/commands/*.md      the five commands
-  notes/
-    writing_style.md
-    reading_notes.md
-    message_map.md
-    notation_table.md
-    decisions_log.md
-    session_log.md
-    plans/                   approved chapter_flow plans
-    checks/                  doc_check reports
+<writer's repo>/
+  doc-profile.md                fixed path, so every skill finds it
+  CLAUDE.md                     two lines point to the profile (added after approval)
+  .claude/skills/               the skills, unless installed in ~/.claude/skills/
+  doc-notes/
+    doc-map.md
+    notes.md                    optional: the writer's own notes, one heading per part
+    notation.md                 thesis mode
+    plans/                      doc-flow reports and approved outlines
+    checks/                     doc-check reports
+    drafts/                     temporary copies; emptied after each decision
 ```
 
-The profile sits at a fixed path (the repo root) because commands load it with `@project_profile.md`, and that reference cannot depend on a setting. All other paths come from the profile.
-
-## 3. Principles shared by all commands
+## 5. Rules every skill follows
 
-These stay in the commands. No profile setting turns them off.
+1. Read the profile first. If there is none, offer doc-setup, or continue with the defaults for the mode the writer names.
+2. The writer's own notes, outline and keep marks win over the skill's suggestions. A conflict is reported, never settled silently.
+3. Show first. Write only after approval. On the web the approval is in Word (tracked changes). In Claude Code it is a reply to a diff.
+4. Never change the value of a number, a fact, a citation, an equation, a cross-reference or a quotation. Only notation-check may change symbols inside equations.
+5. Never add a claim, result or citation that is not in the document or the writer's notes. Every new sentence starts with [NEW].
+6. Never rewrite a keep passage.
+7. Stay in scope. Flag work that belongs to another skill or another part of the document. Do not do it.
+8. Check every change before showing it: protected content with check_protected.py, dashes and banned words with doc_stats.py.
+9. Keep the output within the caps in section 10.
+10. A read-only skill says so in its first line.
+11. Claude Code: one commit per run that writes files, unless the profile says `commit: no`. Never push.
 
-1. Read the profile first. If it is missing or a required field is empty, stop and tell the user to run /setup_profile.
-2. The writer's notes win over the tool's own suggestions.
-3. Report first, then stop and wait. Write files only after approval.
-4. Never drop a number, result, citation or limitation. Merge it into the surviving text and list where it went.
-5. Protected tokens stay byte-identical: math, citation commands, cross-references, labels, units, citation keys and numbers. The profile lists the token types per source format.
-6. Never add a claim, result or citation that is in neither the source text nor the writer's notes. Mark new sentences with [NEW].
-7. Flag material that belongs in another unit. Never move it across units.
-8. Frozen text gets only the passes the profile allows.
-9. Before showing output, search it for em dashes, en dashes and dash-written numeric ranges.
-10. After a write, append one entry to the session log.
+## 6. The skills
 
-## 4. The four commands
-
-The word "unit" below means the top-level part of the document: a chapter in a thesis, a section in a paper. The profile sets the word the commands use in their output.
-
-### 4.1 /doc_check (generic thesis_check)
-
-Whole-document, read-only check with verified findings. Expensive.
-Argument: optional focus, for example "units 1 and 6" or "notation only".
-
-Stays in the command:
+Each skill is a folder with a SKILL.md: a short description (what it does and when to use it) and the instructions.
+On the web, Claude picks a skill when the request matches its description, or when the writer names it: "Use human-write on section 3."
+In Claude Code, the writer can also type the name: `/human-write chapters/ch3.tex "3.2"`.
 
-1. Read-only guarantee: it never edits the document. It writes one report and one log entry.
-2. Orchestration: a Workflow if the session offers one, otherwise parallel subagents.
-3. Stage 1, extract: one agent per unit. Each returns the unit's claim with line number, one line per section, key results with numbers, symbols and first use, acronyms, cross-unit references, opening and closing paragraphs, voice counts, long-sentence share per section.
-4. Stage 2, review: one agent per dimension. The dimensions are message, handoffs, repetition, notation, terminology and cross-references, claims against evidence, voice, requirements, and style.
-5. Stage 3, verify: each finding goes to a separate agent that reads the cited lines and tries to disprove it. Only CONFIRMED findings reach the main report.
-6. Stage 4, report: summary in five lines or fewer, findings by severity, known issues from the message map, rejected findings, comparison with the last report, model used. Each finding carries a ready-to-run command line for the fix.
-
-Becomes a profile setting:
+### 6.1 doc-setup
 
-1. Unit list with file paths, and the main file to cross-check against.
-2. Paths to the style guide, message map, reading notes, notation table and decisions log.
-3. Summary units that must agree (for example the introduction and the conclusion, or the abstract and the results).
-4. Message risks: framings to flag, written by the writer.
-5. Requirements checklist from the institution or venue. The requirements dimension is skipped if the list is empty.
-6. Milestone name for the top severity label ("Blocking before <milestone>").
-7. Extra check prompts the writer wants included.
-8. Reports directory.
-
-### 4.2 /notation_check
-
-Builds the notation table, reports problems, applies approved replacements.
-Argument: optional unit file to limit the scope.
-
-Stays in the command:
+Job: interview the writer and write their one-page profile (settings and style guide).
 
-1. Stage 1: build or update the notation table. One subagent per unit when the scope covers more than one unit.
-2. Stage 2 report: variants, collisions, symbols used before definition, conventions (sign, index placement, tensor or vector style, nondimensionalization), inconsistent words for one symbol, numbered proposed replacements. Then stop.
-3. Where the authority unit is silent or inconsistent, propose a convention and mark it as needing the writer's decision.
-4. Propose a macro when many replacements of one symbol would be simpler. Never edit macro files unless asked.
-5. Stage 3: apply only approved replacements, all or a numbered subset. This is the one command allowed to change symbols inside math. It changes nothing else there.
+Input:
 
-Becomes a profile setting:
+1. Web: the chat. Optionally the document, uploaded, so the skill can propose values.
+2. Claude Code: the chat and the repo. It looks for the main file, the chapter files and the source format before it asks.
 
-1. The notation authority: the unit that sets the convention, or "the notation table" if the writer has one already.
-2. Macro files (read-only unless the writer asks).
-3. Definition rule: define at first use in each unit (usual for a thesis, since units are read alone) or once per document (usual for a paper).
-4. Frozen entries: replacements inside frozen text are listed separately.
-5. Paths to the notation table and decisions log.
+The interview has at most three rounds. Every question has a default. "OK" accepts all defaults in a round.
 
-### 4.3 /chapter_flow
+1. The document: mode; who reads it and what they need; the key message in one sentence; the sections or chapters (proposed from the document when there is one).
+2. Style: voice, spelling, sentence limit, banned words, dash rule, number format. The skill shows the mode's defaults and the writer changes only what differs. Each voice option comes with a one-line example.
+3. Limits: passages that must not be rewritten; house rules (supervisor, school or company rules); length target. Thesis mode adds: which chapters are papers and what may change in them, the notation source, and the next milestone. These questions sit in thesis-questions.md, so report runs never load them.
 
-Whole-unit flow and condensing pass.
-Argument: a unit file and optional extra instructions.
+Output: the profile, shown in full. The writer approves it or edits it.
 
-Stays in the command:
+| | Web | Claude Code |
+|---|---|---|
+| Output | the profile as one block to copy, and the same text as a file | doc-profile.md at the repo root, written after approval |
+| Then | the writer pastes it into the Project's instructions (three steps shown); on a plan without Project instructions, the file goes into the Project's knowledge | the skill offers two lines for the writer's CLAUDE.md, adds them after approval, and commits |
 
-1. Stage 1, a report in ten parts, then stop:
-   1. The unit's claim, quoted from its opening. Say so if there is none.
-   2. The funnel: one line per section on what it argues and whether it serves the claim.
-   3. Repetitions, and which place should keep the material.
-   4. Broken handoffs between sections.
-   5. Misplaced material, flagged and never moved.
-   6. Condensing options with word savings, current word count, estimated total, long-sentence rate per section.
-   7. Message risks and overclaims.
-   8. Voice counts per section, and the contribution statement check.
-   9. How the plan handles each of the writer's notes for this unit: applied (where) or not applied (why). Unreadable notes become questions.
-   10. A proposed plan, with one line per section for /human_write.
-2. Stage 2: save the approved plan with the date.
-3. Stage 3: apply only approved structural moves (reorder, merge, cut duplicates). A new section gets only a heading and a comment stating its planned content. No sentence rewrites. Show the diff and every removed passage with where its content went.
-4. Include open findings for this unit from the latest doc_check report.
+Rules:
 
-Becomes a profile setting:
+1. Look before asking. Propose values from the document or the repo.
+2. Never copy document text into the profile, except the headings and the key message.
+3. The profile fits on one page, about 450 words. Fields that do not apply to the mode are left out.
+4. A rerun reads the current profile, asks what to change and shows a diff.
+5. If the profile comes from an older toolkit version, offer to add the new fields.
+6. Read the headings and at most two pages of the document. Never the whole document.
 
-1. Unit rules, for example "no equations in the introduction" or "every acronym explained in plain words".
-2. Frozen entries and their allowed passes.
-3. Voice rule and whether the unit needs a contribution statement.
-4. Long-sentence threshold, per unit if the audience differs.
-5. Word count command and length target per unit.
-6. Plans directory, reading notes path, reports directory.
+### 6.2 human-write
 
-### 4.4 /human_write
+Job: rewrite one section to the profile's style.
 
-Section-level strict rewrite pass.
-Argument: a file with a section name, a file with a line range, or pasted text. Optional extra instructions, including "voice only".
+Input:
 
-Stays in the command:
+1. Web: an uploaded Word file and the section's heading or number. A PDF or pasted text also works. Optional notes in the message.
+2. Claude Code: a file and a section heading or line range. Optional notes.
+3. Optional in both: "light", which fixes only rule breaches (banned words, dashes, number format, voice, spelling) and leaves the sentences otherwise alone.
 
-1. Read the whole unit for context and its approved plan. Rewrite only the target. If the target is a whole unit, send the writer to /chapter_flow first, unless the mode is voice only.
-2. Voice-only mode: change only pronouns and self-references, per the profile's voice rule. Works on any target up to a whole unit.
-3. Section funnel: the first sentence states what the section argues. Each paragraph leads with its claim. The last sentence states the finding and sets up the next section. No recaps or signposting in between.
-4. Sentence-by-sentence pass against the style guide. Condense repetition without losing content.
-5. Long sentences: each kept sentence over the threshold needs a reason. Propose splits where they cluster.
-6. Protected tokens byte-identical. The only number change allowed is the style guide's spelled-out small counts, and each one is listed. Symbols that differ from the notation table are flagged for /notation_check, not changed.
-7. Output: a diff with [NEW] marks, then seven lists: (a) flags, (b) number changes, (c) removed sentences and where their content went, (d) possible meaning shifts, old and new side by side, (e) the writer's notes applied, (f) long sentences kept with word count and reason, (g) voice questions where it is unclear who did the work.
+Reads: the profile, the map, the target section, and the paragraph before and after it. With the standard budget it also reads the rest of the chapter. Never the whole document. Without a map, it works from the section alone and suggests "doc-flow map only".
 
-Becomes a profile setting:
+Rules:
 
-1. Voice choice and its rules (see section 5.4).
-2. Frozen entries, allowed passes and the override phrase.
-3. Reading-note marks and their meanings.
-4. Protected token list for the source format.
-5. Audience per unit, and the long-sentence threshold.
-6. Paths to the style guide, notation table, plans and session log.
+1. Lead each paragraph with its claim.
+2. Short sentences by default. A sentence over the profile's limit (default 25 words) needs a reason, and the reason is listed.
+3. Cut filler words and the profile's banned words.
+4. No recaps or signposting inside the section.
+5. Never change numbers, facts, citations or equations. The format of a number may change to meet the profile's number rule. Its value never changes.
+6. Never invent claims, results or citations. A new sentence may only restate what the section or the map already says, and it starts with [NEW].
+7. Never rewrite a keep passage. A chapter based on a paper gets only the passes the profile allows.
+8. Follow the profile's voice, spelling, dash rule and house rules.
+9. Use the map's key terms. A symbol that differs from the notation table is flagged for notation-check, not changed.
+10. Material that belongs elsewhere is flagged for doc-flow, not moved.
+11. One section per run. A request for more gets the first section and a note to start a new chat for the next one.
+12. Before showing anything, run check_protected.py and doc_stats.py on the result. Fix every difference, or list it.
 
-## 5. project_profile.md, field by field
+Output, in both places: the rewrite with its [NEW] marks, then these lists. One line per item. Empty lists are left out.
 
-Format: plain Markdown with fixed headings. Short fields are `key: value` lines. Lists are numbered. Each field in the template has a one-line comment saying what it does and which commands read it. Required fields are marked (required).
+1. Number changes: old and new form, and where.
+2. Removed sentences, and where their content went.
+3. Sentences whose meaning could have shifted: old and new, side by side.
+4. Long sentences kept: word count and reason.
+5. Flags for other skills.
 
-### 5.1 Document
+| | Web | Claude Code |
+|---|---|---|
+| Shows | a copy of the Word file with the rewrite as tracked changes (author "Claude"); the lists in the chat | a diff of a draft copy, and the lists |
+| Approval | the writer accepts or rejects each change in Word; their own file does not change until they do | "approve", "approve except 2 and 5", or edits |
+| Writes | nothing else | after approval: the file, then one commit |
+| PDF or pasted text | a new Word file with the original section and the changes tracked | the skill works on the files in the repo |
+| A Word file in the repo | as above | a copy next to it with tracked changes; the original stays until the writer replaces it |
 
-1. document_type (required): thesis, paper, book or report. Sets defaults for other fields.
-2. unit_name: what the top-level part is called. Default "chapter" for a thesis or book, "section" for a paper.
-3. source_format (required): latex, markdown, quarto, typst or other. Sets the default protected tokens and the dash search.
-4. main_file (required): the file that includes the units, for example main.tex.
-5. spelling: US or UK English, plus any fixed spellings.
-6. next_milestone: the next draft the writer is working toward, for example "committee draft". Used in severity labels.
+Paragraphs the script cannot edit safely (equations, fields, footnotes, existing tracked changes) stay as they are. Their proposed text goes into the chat instead.
 
-### 5.2 Units (required)
+### 6.3 doc-flow
 
-One row per unit, in reading order:
+Job: review the structure of one report or one thesis chapter, apply approved structural moves, and write the map.
 
-1. number: the built number the reader sees.
-2. short_name: a few words.
-3. file: path to the source file.
-4. role: introduction, background, method, results, discussion, conclusion or appendix.
-5. based_on: none, a published paper, or a submitted manuscript. If set, the unit needs a contribution statement.
-6. collaborators: names to credit for work in this unit. Used by the voice rule.
-7. audience: overrides the document audience for this unit, for example "non-specialist".
-8. length_target: words or printed pages.
-9. rules: free-text rules for this unit, one per line.
+Input:
 
-### 5.3 Frozen text
+1. Web: an uploaded Word file (or a PDF, or pasted text). The writer's notes in the message or as Word comments. Their own outline, if they have one.
+2. Claude Code: a file. Notes from doc-notes/notes.md and from comments in the source.
 
-One entry per frozen passage:
+Reads: the profile, the whole document or chapter, the writer's notes and the current map.
 
-1. unit and location: section numbers or a line range.
-2. reason: published, submitted, legally fixed, or other.
-3. allowed passes: voice, notation, or none.
-4. external copy: where the matching version lives, if any, so the writer knows to update both.
+Stage 1, the report. Then stop.
 
-Plus one field for the whole document:
+1. Main message: quoted, with its place. Is it stated as early as the profile's opening rule asks?
+2. One line per section: its job, and whether it moves toward the main message.
+3. Repetition: where, and which place should keep the material.
+4. Broken handoffs between sections.
+5. Material in the wrong place. Material that belongs in another chapter is flagged, never moved there.
+6. Where to condense, with the words each cut saves. Current length against the target.
+7. Long-sentence rate per section, from doc_stats.py.
+8. The writer's notes: applied, or why not. The notes win over the skill's own suggestions.
+9. The proposed outline, and a numbered list of moves: reorder, merge, cut a duplicate, add a heading.
 
-5. override_phrase: the words the writer types to allow a full edit of frozen text, for example "edit frozen too".
+Stage 2, after the writer approves all moves or some of them: apply only structural moves. No sentence is rewritten. A new heading gets no body text. The facts in a cut duplicate must survive elsewhere, and check_protected.py confirms it. Every removed passage is listed with where its content went.
 
-### 5.4 Voice
+Stage 3: write the map (section 8). "doc-flow map only" skips stages 1 and 2. It reads the document and writes the map. This is the cheap way to give human-write a map.
 
-1. person (required): one of "I" (first person singular), "we" (first person plural), third person, or impersonal.
-2. banned self-references: derived from the choice, with room to add more.
-3. credit rule: name collaborators and predecessors instead of using a pronoun for their work. On by default.
-4. contribution_statement: required for units with based_on set. Yes or no.
-5. self_citation_form: how the writer cites their own published work.
+| | Web | Claude Code |
+|---|---|---|
+| Stage 1 | the report in the chat | the report in the chat, saved in doc-notes/plans/ |
+| Stage 2 | a copy of the Word file with the moves as tracked changes (a move shows as a deletion and an insertion) | a draft copy, a diff that marks moved lines, a second approval, then the file |
+| Map | a doc-map.md file to download and add to the Project's knowledge | doc-notes/doc-map.md |
+| Commit | none | one commit for the plan, the moves and the map |
 
-### 5.5 Audience and sentences
+### 6.4 doc-check
 
-1. audience: the primary reader, in one line.
-2. long_sentence_words: the threshold. Default 25.
-3. strict_units: units with a stricter threshold, and the threshold for them.
+Read-only. It never changes the document. It has two modes.
 
-### 5.6 Message
+Quick mode is the default. Both users, web and Claude Code.
 
-1. message_map: path.
-2. summary_units: the units that must tell the same story.
-3. message_risks: framings to flag, one per line. Example: "a side study presented as a main contribution".
+1. Input: the whole document, or one chapter.
+2. Reads: the profile, the map and the document. One pass. No subagents.
+3. The checklist is fixed:
+   1. The main message is clear and up front.
+   2. Numbers agree across sections, and with the map.
+   3. Terms are used the same way throughout.
+   4. Claims that need a source and have none.
+   5. The length suits the audience and the target.
+   6. The profile's style rules: sentence limit, banned words, dashes, number format, voice, leftover [NEW] marks. doc_stats.py counts these.
+4. Output: the top 10 issues only, most important first. Each gives the section, the words it is about (a short quote), why it matters in one line, and a next step: a skill to run or a decision for the writer. One more line gives the count of smaller issues not shown.
 
-### 5.7 Notation
+| | Web | Claude Code |
+|---|---|---|
+| Quick output | the list in the chat | the list in the chat, saved as doc-notes/checks/<date>-quick.md, one commit |
+| Full mode | not available; says it needs Claude Code and offers quick mode | available |
 
-1. notation_authority: a unit number, or "table".
-2. notation_table: path.
-3. macro_files: paths, read-only.
-4. define_at_first_use: per unit or per document.
+Full mode is for Claude Code, thesis users and a large budget. It states its estimated cost and asks before it starts. Its instructions sit in full-mode.md, so quick runs never load them. The skill runs in the main conversation (not as a forked skill), because the main conversation launches the subagents.
 
-### 5.8 Reading notes
+1. Extract: one subagent per chapter, on Sonnet. Each returns the chapter's claim, one line per section, key numbers, terms, symbols, citations and handoffs.
+2. Review: one subagent per check dimension: message, structure and handoffs, repetition, numbers, terms, notation (thesis mode only), claims and sources, style and voice, house rules.
+3. Verify: subagents that try to disprove each finding by reading the cited lines. Each verifier takes up to five findings from one chapter. Only findings that survive reach the report. Rejected findings get one line each.
+4. Report: saved as doc-notes/checks/<date>-full.md. A summary of at most five lines. Findings grouped by severity: blocking before the milestone, major, minor. Each has its place, its evidence and a next step. A comparison with the previous full report: new, fixed, still open.
+5. The chat shows the summary and the blocking findings. The file holds the rest.
 
-1. reading_notes: path.
-2. marks: the standard marks and their meanings (keep, cut, move to unit N, too strong, too weak), plus any custom marks the writer adds.
-3. unclear_marker: default [?].
+### 6.5 notation-check
 
-### 5.9 Length and build
+Thesis mode only. In report mode it says so and stops.
 
-1. word_count_command: for example `texcount -sum -q {file}` or `wc -w {file}`.
-2. build_command and build_dir.
-3. build_log and a check command for undefined references.
-4. build_fallback: manual steps if the build command fails.
+Job: keep symbols consistent across chapters.
 
-### 5.10 Requirements
+Input:
 
-1. requirements: a numbered checklist from the institution or venue. Free text. Checked by /doc_check.
+1. Claude Code: the chapter files named in the profile, or one chapter.
+2. Web: uploaded LaTeX or Markdown files. A PDF gives a report only, with lower accuracy.
 
-### 5.11 Paths
+Stage 1: symbols.py lists every symbol in the math with file, line and the sentence around its first use. Claude reads that list, not the whole thesis. It builds or updates the symbol table: symbol, meaning, where it is defined, variants.
 
-1. notes_dir: default notes/.
-2. style_guide, decisions_log, session_log, plans_dir, checks_dir.
-3. extra_check_prompts: files /doc_check should also read.
+Stage 2, the report. Then stop.
 
-### 5.12 Protected tokens
+1. Variants: one quantity, several symbols.
+2. Clashes: one symbol, several meanings.
+3. Symbols used before they are defined, under the profile's rule (in each chapter, or once per thesis).
+4. Numbered fixes. The profile's notation source decides. Where it is silent, the skill proposes a convention and marks it as the writer's decision.
 
-1. Defaults per source_format. For LaTeX: commands, inline and display math, citation commands, cross-reference commands, labels, units, citation keys, numbers.
-2. extra_protected: the writer's own macros.
+Stage 3: apply approved fixes only. This is the only skill that may change symbols inside equations. It changes nothing else.
 
-## 6. Setup prompt
+| | Web | Claude Code |
+|---|---|---|
+| Symbol table | a notation.md file to download and add to the Project's knowledge | doc-notes/notation.md |
+| Fixes | corrected copies of the uploaded LaTeX or Markdown files, and the list; symbols inside Word equations are listed for the writer to change by hand | a draft copy, a diff, approval, the files, one commit |
 
-Two pieces with one source of truth:
+## 7. The profile, field by field
 
-1. setup/SETUP_PROMPT.md: a short prompt the user pastes into Claude Code in their own repo. It copies the commands and templates from the toolkit, then reads and follows commands/setup_profile.md.
-2. commands/setup_profile.md: the interview itself. The user can rerun it later as /setup_profile to update the profile.
+The profile is one Markdown page of about 450 words at most. doc-setup writes it. It has two parts:
 
-The interview:
+1. Document: settings, one `key: value` line each.
+2. Style guide: numbered rules in plain words, so that the writer and Claude can both read them. In a Project, they also guide any text Claude drafts there.
 
-1. Look before asking. Find the main file, the unit files, the build files, macro files and any word count tool. Propose values from what it finds.
-2. Ask in small batches, in this order: document type and format; units (confirm the detected list); voice; audience; frozen text; notation authority; build and length; requirements; milestone. Offer a sensible default for every question.
-3. Explain each choice in one sentence when it matters. The voice question explains the four options with a one-line example each.
-4. Show the full profile and wait for approval before writing.
-5. Write project_profile.md. Copy the templates into notes_dir, skipping files that already exist. Fill the voice section of writing_style.md from the voice choice.
-6. Append the snippet to the user's CLAUDE.md, after showing it.
-7. Validate: every path in the profile exists, the build command runs, the word count command runs. Report what failed.
-8. Tell the user the first step of the tutorial.
+The written profile has no comments, to stay short. docs/profile-reference.md explains every field. The first line gives the toolkit version. Fields that do not apply to the mode or the place are left out.
 
-On a rerun, it reads the current profile, asks only what the user wants to change, and shows a diff.
+Document:
 
-## 7. Templates
+| Field | What it sets | Thesis default | Report default | Read by |
+|---|---|---|---|---|
+| mode | defaults and features | thesis | report | all |
+| audience | who reads it and what they need | examiners and researchers in the field | busy decision makers; many read only page one | all |
+| key_message | the one sentence the reader must take away; a report adds the decision it asks for | asked | asked | doc-flow, doc-check; human-write through the map |
+| opening | where the main message must appear | each chapter states its claim in its first paragraph | the first paragraph states the message and the decision needed | doc-flow, doc-check |
+| parts | chapters or sections in reading order; per part, optional: file (Claude Code), audience, length, paper and passes (thesis) | chapters, from the files | sections, from the headings | doc-flow, doc-check, notation-check |
+| length | length target | none | summary on one page | doc-flow, doc-check |
+| keep | passages never rewritten, besides keep marks in the text | quotations | quotations; legal and policy text | human-write, doc-flow |
+| budget | auto, lean or standard (section 10) | auto: standard in Claude Code, lean on the web | auto: lean | human-write, doc-flow |
 
-Every template is short, generic and has comments that explain each part. Setup copies them. The writer owns them after that.
+Style guide:
 
-1. writing_style.md: a default style guide the writer is expected to edit. Sections: voice (one of three variants, chosen at setup), punctuation, structure, numbers and equations, hedging, words to avoid, limitations, citations, editing existing text. Each rule is one line with a short example. Invented examples only.
-2. reading_notes.md: a legend of marks at the top, then one heading per unit. One note per line: location (section or printed page), mark, note. Guidance: one idea per note, and write the fix if you know it.
-3. message_map.md: the document's claim in one sentence. Per unit: its claim, what it adds, what it hands to the next unit. A "does not claim" list. A "known issues" list that /doc_check reports against.
-4. notation_table.md: columns for quantity, meaning, canonical symbol, source code, macro, variants by unit with file:line, and status (agreed or needs decision).
-5. decisions_log.md: dated entries with the decision, the reason, the scope, who decided, and what it supersedes. Commands read the entries whose scope matches their task.
-6. session_log.md: one line per write: timestamp, command, target, one-sentence summary.
-7. claude_md_snippet.md: a few lines for the user's CLAUDE.md: read project_profile.md before editing the document, follow the style guide, show diffs before writing.
+| Field | What it sets | Thesis default | Report default | Read by |
+|---|---|---|---|---|
+| voice | who speaks, and how others get credit | "I"; others named for their work | "we" for the organization | human-write, doc-check |
+| spelling | US or UK English | taken from the document | taken from the document | human-write, doc-check |
+| sentence_limit | the length in words after which a sentence needs a reason | 25 | 25 | human-write, doc-flow, doc-check |
+| banned_words | words to cut | short list of academic filler ("very", "clearly", "it is worth noting") | short list of business filler ("leverage", "going forward", "in order to") | human-write, doc-check |
+| dashes | the dash rule | no em dashes; ranges written "5 to 10" | same | human-write, doc-check |
+| numbers | how numbers are written | digits with units ("5 kg"); counts from one to nine in words | one to nine in words, digits from 10; a thousands separator; the % sign | human-write, doc-check |
+| house_rules | the writer's own rules: supervisor, school or company | none | none | human-write, doc-flow, doc-check |
 
-## 8. Docs
+Thesis only:
 
-1. tutorial.md: the editing cycle, adapted from the design of the original guide, written with an invented example document. Parts:
-   1. The big picture: the writer's reading decides the message; the tools apply it and check it.
-   2. Baseline: run /doc_check and /notation_check before reading. How to read the report.
-   3. Reading and marking on paper or on screen. The marks and what each one tells the tools.
-   4. Getting notes into the repo: a transcription prompt, and checking it line by line.
-   5. Editing one unit: /chapter_flow report, plan approval, structural diff, /human_write section by section, voice-only passes on frozen text, rebuild, checks before moving on.
-   6. After all units: apply notation, run the second /doc_check, compare with the baseline.
-   7. The final read before the milestone.
-   8. Quick reference: task, command, suggested model and effort.
-   9. What the tools cannot do, and troubleshooting.
-2. install.md: manual install, updating to a new toolkit version without losing the profile, uninstall.
-3. profile_reference.md: every field, its default, and which commands read it.
-4. customizing.md: add a mark, a unit rule, a message risk or a requirement. When to edit the style guide versus the profile.
+| Field | What it sets | Thesis default | Read by |
+|---|---|---|---|
+| paper and passes (per chapter in parts) | whether a chapter is based on a paper (none, submitted, published) and what may change in it (none, light, full) | published: light; submitted or none: full | human-write, doc-flow |
+| contribution | chapters based on co-authored papers say who did what | yes | doc-flow, doc-check |
+| notation_source | the chapter or table that sets the symbols | the symbol table | notation-check, human-write |
+| define_symbols | define each symbol at first use in each chapter, or once in the thesis | each chapter | notation-check |
+| milestone | the next deadline; used in full-check severity labels | asked | doc-check |
 
-## 9. Distribution
+Claude Code only:
 
-1. Now: a plain repo. The user clones it next to their project and pastes the setup prompt. Commands are copied into the project's .claude/commands/, so they work offline and the user can edit them.
-2. Later: a Claude Code plugin with the same commands and templates, installable from a marketplace. Commands would be namespaced (for example `/thesis-toolkit:human_write`). The plugin reads templates from its own install folder. The profile stays in the user's repo, so switching from the plain repo to the plugin needs no profile change.
-3. Versioning: a version line in each command and in the profile template. /setup_profile warns when the profile is older than the commands and offers to add new fields.
+| Field | What it sets | Default | Read by |
+|---|---|---|---|
+| format | latex, markdown, word or text | detected | all |
+| notes_dir | where the map, plans, reports and symbol table go | doc-notes/ | all |
+| commit | commit after each approved write | yes | all |
+| protected_extra | the writer's own macros that must never change | none | human-write, doc-flow |
 
-## 10. Later additions
+## 8. The document map
 
-1. /respond_reviewers: takes reviewer comments and the document. Stage 1 splits the comments into numbered points and maps each to locations in the text. Stage 2 drafts a response table (point, response, change made, location) in the writer's voice. Stage 3 applies approved text changes through the same rules as /human_write. Never promises an experiment the writer has not confirmed.
-2. /cite_check: read-only. Every citation key resolves in the bibliography. No unused entries. Flags claims that need a citation and have none, and bibliography entries with missing fields. Does not judge whether a source supports a claim unless the writer supplies the source.
-3. /figure_check: read-only. Every figure and table is referenced in the text before it appears. Captions are self-contained. Symbols in captions match the notation table. Units on axes are named in the caption or text. Reports figures never discussed.
+doc-flow writes the map. human-write and doc-check read it. No other skill changes it.
 
-## 11. Build order and open decisions
+It holds:
 
-Build order, after approval:
+1. The date it was written.
+2. The main message.
+3. For each section (a thesis: each chapter, then its sections): the heading and one line on its job.
+4. Key numbers: the value, what it is, and where it appears.
+5. Key terms: the term to use, and the variants to avoid. doc-check's terms check needs them.
 
-1. templates/project_profile.md and docs/profile_reference.md, since every command depends on them.
-2. The other templates.
-3. commands/setup_profile.md and setup/SETUP_PROMPT.md.
-4. The four commands.
-5. examples/sample_doc: a short invented LaTeX document, about three units, with planted problems (a symbol variant, a repeated paragraph, a voice slip, a dash range) so each command has something to find.
-6. Dry runs of every command on the sample document. Fix the commands.
-7. docs/tutorial.md and docs/install.md, written against the sample document.
-8. README.md.
+The cap is one page for a report, and one page per chapter for a thesis.
+If the headings in the document no longer match the map, human-write says so and suggests "doc-flow map only".
 
-Decided:
+## 9. Scripts
 
-1. The whole-document check is `/doc_check`. "thesis_check" reads oddly for a paper.
-2. The profile lives at the repo root, where the writer can find it.
-3. The toolkit ships examples/sample_doc. It doubles as the test fixture.
+Scripts do the mechanical work, so Claude reads less and the results are exact.
+They use only the Python standard library and make no network calls.
+Their code never enters Claude's context. Claude runs them and reads their short output.
+The same SKILL.md text finds them in both places: on claude.ai the skill folder is copied into the sandbox; in Claude Code the path is `${CLAUDE_SKILL_DIR}/scripts/`.
+
+1. docx_tool.py (human-write, doc-flow, doc-check):
+   1. `outline`: the headings, with paragraph numbers.
+   2. `read`: the paragraphs of one section (or all), numbered, with flags for equations, fields, footnotes, comments and tracked changes. Word comments come out as notes and keep marks.
+   3. `apply`: takes a list of changes by paragraph number (replace, delete, insert, move, add heading) and writes them as tracked changes into a copy. Inside a replaced paragraph, only the changed words are marked. Everything else in the file stays byte for byte the same. It refuses a paragraph it cannot edit safely, and says why.
+   4. `from-text`: builds a plain Word file from pasted or PDF text, so changes can be tracked against it.
+2. check_protected.py (human-write, doc-flow): compares text before and after. It reports any change to number values, citation keys, math, cross-references, labels, links and quotations. A number from a cut passage must appear elsewhere, or be listed.
+3. doc_stats.py (human-write, doc-flow, doc-check): words per section, sentences over the limit, banned words and dashes, for Word, LaTeX, Markdown and plain text.
+4. symbols.py (notation-check only): every symbol in LaTeX or Markdown math, with file, line and context.
+
+Real Word files are messy. The first version edits plain paragraphs and headings only. Tables, text boxes and paragraphs with equations or fields stay as they are, and the proposal goes into the chat.
+
+Why our own Word script: Anthropic's built-in docx skill can also write tracked changes, but Claude then reads and writes the raw Word XML. That XML is several times longer than the text, and writing it is output, the most expensive kind of token. Our script takes plain text and paragraph numbers instead. On the web, the built-in skill stays a fallback for a paragraph our script refuses, at a higher token cost. Its license forbids copying, so the toolkit never copies or adapts its code.
+
+## 10. Token budget and cost
+
+### 10.1 Budget rules
+
+The budget setting is `lean` or `standard`. The default (`auto`) is lean in report mode and on the web, and standard for a thesis in Claude Code. Standard changes two things only: human-write also reads the rest of the chapter, and doc-flow may write a longer report.
+
+1. No subagents, except in doc-check full mode.
+2. One section per human-write run.
+3. human-write reads the map, the section and the paragraph on either side. Never the whole document.
+4. Outputs are capped (10.2).
+5. Each SKILL.md is at most 900 words, about 1,500 tokens. Each description is under 200 characters, the limit claude.ai's help pages give. That also matters for cost: every installed skill's description is read in every chat. Detail that only some runs need sits in a separate file in the skill folder.
+6. Scripts do the mechanical work. Their code is never read into the context.
+7. On the web, each step starts a new chat. The profile and the map carry what the next step needs.
+8. The document is uploaded to the chat that needs it. It never goes into the Project's knowledge.
+9. No chat preview repeats what the Word file already shows. Empty lists are left out.
+10. Writers install only the skills they use. A business writer skips notation-check.
+
+### 10.2 Output caps
+
+| Skill | Cap |
+|---|---|
+| doc-setup | three question rounds; the profile on one page (about 450 words) |
+| human-write | one section; one line per list item; at most 100 words of other chat text |
+| doc-flow | report at most 600 words (lean) or 1,200 words (standard); map on one page |
+| doc-check quick | 10 issues, about 40 words each |
+| doc-check full | in the chat: the summary and the blocking findings; the rest in the file |
+| notation-check | report on one page in the chat; the full symbol table in a file |
+
+### 10.3 Models
+
+1. Sonnet by default, for every skill.
+2. Opus for important documents (a final version, a board report, a thesis introduction or conclusion) and for doc-check full mode.
+3. Extended thinking only for doc-flow on important documents and for full checks. Thinking is billed as output, the most expensive kind of token.
+4. In full mode, the extraction subagents run on Sonnet even when the session runs on Opus.
+
+### 10.4 Cost of one typical round
+
+The round: doc-flow, then human-write on three sections, then doc-check quick.
+
+Assumptions:
+
+1. A report of 6,000 words (about 12 pages) in six sections of 1,000 words. With current models one word is about 1.7 tokens, so the report is about 10,000 tokens.
+2. The web, with one new chat per step. The profile sits in the Project's instructions, the map in its knowledge.
+3. Only the toolkit's own tokens count: skill descriptions, SKILL.md, profile, map, document and output. The fixed overhead of claude.ai or Claude Code is left out.
+4. Each tool call re-reads the chat so far. These re-reads come from the prompt cache, at a tenth of the normal input price or less.
+5. Light thinking: about 1,000 to 2,000 tokens per step.
+6. API list prices on 28 September 2026, in US dollars per million tokens. Sonnet: 2 input, 10 output. Opus: 4 input, 20 output. Cache reads: 0.20 for both.
+
+| Step | New input | Cached re-reads | Output |
+|---|---|---|---|
+| doc-flow: report, moves, map | 13,000 | 75,000 | 4,000 |
+| human-write, three sections | 18,000 | 75,000 | 10,500 |
+| doc-check quick | 14,000 | 15,000 | 2,500 |
+| Total | 45,000 | 165,000 | 17,000 |
+
+Result: about $0.30 per round on Sonnet, and about $0.55 on Opus.
+
+Notes:
+
+1. Output is more than half of the cost. That is why the skills cap their output and never repeat in the chat what the Word file shows.
+2. If claude.ai puts the whole uploaded file into the context on every upload, each human-write run reads about 10,000 tokens more. That adds about $0.08 per round on Sonnet and $0.14 on Opus. The spike measures this (section 14).
+3. The same round on a 10,000-word thesis chapter in Claude Code, with the standard budget: about $0.60 on Sonnet and $1.10 on Opus. Claude Code's own cached overhead comes on top, roughly $0.20 to $0.50.
+4. doc-check full mode on a 70,000-word thesis: roughly $3.50 on Sonnet and $5.50 on Opus (with extraction on Sonnet).
+5. On a claude.ai subscription the writer pays a fixed fee. The same tokens count against the plan's usage limits, so the same savings apply. claude.ai, the desktop app and Claude Code share one limit. Long chats, large files and file creation use it faster. Anthropic's own advice is to start a new chat when a chat gets long.
+
+## 11. Test plan
+
+Two invented samples, written for this repo. Never a real user document. They are short, so a full test round stays cheap.
+
+1. A report of about 3,000 words in six sections, for a fictional organization. Formats: Word (main), PDF and Markdown.
+2. A thesis chapter of about 4,000 words in LaTeX, on an invented model, with its PDF. A half-page stub of the chapter before it, so notation-check has a second chapter to compare.
+
+Each sample has planted.md, which lists every planted problem and where it is.
+
+1. Report: the main message buried at the end; a number that differs between two sections; one concept under two names; a repeated paragraph; filler and banned words; sentences over 25 words; a recap and a signpost; a claim without a source; an em dash; a quoted clause marked keep; a Word comment whose note goes against what doc-flow would suggest; a table and a footnote the script must leave alone.
+2. Chapter: the chapter's claim only at the end; a symbol variant; a symbol clash; a symbol used before its definition; an equation, a citation and a cross-reference inside text that needs rewriting; a section from a published paper with light passes only; voice slips; a repeated paragraph; a broken handoff; a result in the method section; an en dash range; and a false alarm: two terms that look inconsistent but name two different things.
+
+tests/expected/ says, per skill and sample, what the skill must find, what it must change and what it must leave alone.
+
+Pass criteria:
+
+1. doc-setup: finishes in three rounds or fewer; the profile fits on one page; report mode leaves out thesis fields; a rerun shows a diff.
+2. human-write: fixes every planted style problem in the section; check_protected.py finds no change to numbers, citations, equations, cross-references or keep passages; every new sentence has [NEW]; every list is complete against planted.md; the Word file opens in Word and LibreOffice and shows tracked changes; nothing outside the section changes; in Claude Code, nothing is written before approval.
+3. doc-flow: finds the buried message, the repetition, the broken handoff and the misplaced result; follows the writer's note over its own suggestion; applies only structural moves; loses no fact; the map fits on one page and has the right key numbers.
+4. doc-check quick: finds at least 8 of the 10 most important planted problems; shows no more than 10; changes nothing.
+5. doc-check full: finds every planted problem; rejects the false alarm; compares correctly with an earlier report.
+6. notation-check: finds the variant, the clash and the symbol used before its definition; changes only approved symbols and nothing outside the math; stops in report mode.
+
+How and where:
+
+1. Every skill runs on the web (claude.ai, Sonnet) and in Claude Code (Sonnet). Full mode also runs on Opus. Each test starts a new chat or session.
+2. Tokens: measure each step in Claude Code and compare with section 10.4. A step more than 50% over its estimate is a bug to fix before release.
+3. Automatic checks run on every push: dashes, SKILL.md size and frontmatter, shared copies in sync, unit tests for the scripts.
+4. Results go in tests/results/<version>.md: one line per skill and place, pass or fail, with notes. A release needs every line to pass.
+5. After any change to a SKILL.md or a script, rerun that skill's tests.
+
+## 12. Docs
+
+1. The web guide: a Word document for a non-technical reader. The text lives in docs/web-guide.md. Each release builds web-guide.docx from it and attaches it. Each screenshot place is a line of its own, like "[Screenshot 4: the Skills page, with the upload button circled]". Parts:
+   1. What you need: a claude.ai account with code execution turned on. It is on by default, and skills work on every plan.
+   2. Install the skills: download the zips and upload them.
+   3. Make a Project for your document.
+   4. Run doc-setup. Paste the profile into the Project's instructions.
+   5. Fix the structure with doc-flow. Review the tracked changes in Word. Add the map to the Project.
+   6. Rewrite one section at a time with human-write.
+   7. Check with doc-check before you send.
+   8. Save tokens: a new chat per step, Sonnet by default, one section at a time, the document never in the Project.
+   9. What the skills never do.
+   10. When something goes wrong.
+2. The Claude Code guide (docs/claude-code-guide.md): install, /doc-setup, the cycle, the files in doc-notes/, approvals and commits, models and cost, full mode, troubleshooting.
+3. The profile reference (docs/profile-reference.md): every field, its defaults per mode, and which skills read it.
+4. The README, five lines: what the toolkit is, who it is for, how to start on the web, how to start in Claude Code, and the license.
+
+## 13. Distribution
+
+1. GitHub Releases. A version tag (for example v0.1.0) starts release.yml. It builds:
+   1. One zip per skill, for claude.ai. Each holds one skill folder, named exactly like the skill, with its SKILL.md inside.
+   2. One zip with all five skills, for Claude Code.
+   3. web-guide.docx.
+2. Web install: upload each zip under Customize, Skills. A Team or Enterprise owner can upload them once in the organization settings, and they are then on for everyone.
+3. Claude Code install: unzip into .claude/skills/ in the repo, or into ~/.claude/skills/ for all projects. A writer who uploaded the skills on claude.ai may already have them: Claude Code signed in with the same account syncs them. The guide says to install in one place only.
+4. Later, a Claude Code plugin from this repo: add .claude-plugin/plugin.json and a marketplace file. Writers run `/plugin marketplace add <owner>/<repo>` and then `/plugin install`. The skills are then named like `/<plugin>:human-write`. The profile stays in the writer's repo, so the switch needs no profile change.
+5. Versions: each SKILL.md carries the toolkit version in its metadata, and so does the profile. doc-setup offers to update an older profile.
+
+## 14. Build order
+
+1. Spike, one day at most. Build a tiny test skill with a script. Upload it to claude.ai and install it in Claude Code. Confirm:
+   1. which frontmatter fields claude.ai accepts besides name and description (we need one for the version);
+   2. that a bundled script runs on claude.ai and returns a Word file to download;
+   3. whether an uploaded Word file's whole text enters the context (this changes 10.4);
+   4. that the uploaded Word file itself reaches the sandbox, so the script can read it and its comments;
+   5. that tracked changes written by the script open cleanly in Word and LibreOffice.
+2. The samples, planted.md and expected results. The profile template and the profile reference.
+3. doc-setup.
+4. The shared scripts and their unit tests.
+5. human-write. Test it on both samples, on the web and in Claude Code.
+6. doc-flow and the map. Test human-write again, now with a map.
+7. doc-check quick.
+8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs.
+9. doc-check full mode.
+10. notation-check.
+11. The Claude Code guide, a full release test, and release v1.0.
+12. Later: the plugin.
+
+## 15. Decisions
+
+Decided on 28 September 2026:
+
+1. Approval on the web: the tracked-changes Word file is the approval step. The writer accepts or rejects each change in Word, and their own file does not change until they do. No preview in the chat first, because that would cost about twice the output tokens of a human-write run.
+2. The budget setting stays visible: `budget` (auto, lean, standard) in the profile. "Lean by default for reports and on the web" is one switch the writer can see and change.
+3. Verifiers in full mode take up to five findings each, from one chapter. One verifier per finding would be stricter, but it would cost about twice as much for that stage.
+4. The repo is renamed claude-writing-toolkit, because the toolkit serves reports as well as theses. GitHub redirects the old name.
+
+## 16. Later
+
+1. The Claude Code plugin.
+2. Reviewer responses: turn reviewer comments into a response table, and apply approved changes under human-write's rules.
+3. A citation check: every citation resolves, and every claim that needs a source has one.
+4. A figure and table check: every figure is referenced in the text and has a caption that stands alone.
+5. [NEW] marks as Word comments instead of text.
+6. Languages other than English.
