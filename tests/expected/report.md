@@ -36,7 +36,7 @@ Must change:
 2. Write "12 weeks" for "twelve weeks" and "three staff" for "3 staff" (RP15), and list both as number format changes.
 3. Lead each paragraph with its claim, and cut filler.
 
-Must flag, not change: the result in paragraph 7 (RP17), for doc-flow.
+Should flag, not change: the result in paragraph 7 (RP17), for doc-flow. This is a "should": human-write sees one section, and doc-flow must find it.
 
 Must leave alone:
 

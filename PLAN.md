@@ -82,11 +82,13 @@ claude-writing-toolkit/
     human-write/
       SKILL.md
       word-output.md            how to return tracked changes; read only for Word output
+      text-output.md            how to show and write changes to a text file in Claude Code
       scripts/                  copies of shared/ scripts
     doc-flow/
       SKILL.md
       map-template.md
       word-output.md
+      text-output.md
       scripts/
     doc-check/
       SKILL.md                  quick mode
@@ -94,12 +96,14 @@ claude-writing-toolkit/
       scripts/
     notation-check/
       SKILL.md
+      text-output.md
       scripts/symbols.py        lists every symbol in the math, with place and context
   shared/                       the one source for files that several skills need
     docx_tool.py                reads Word files and writes tracked changes
     check_protected.py          compares numbers, citations and math before and after
     doc_stats.py                words, long sentences, banned words and dashes per section
     word-output.md
+    text-output.md
   templates/
     doc-profile.md              blank profile with a comment on every field
     doc-map.md                  the map format, with an invented example
@@ -214,13 +218,13 @@ Rules:
 1. Lead each paragraph with its claim.
 2. Short sentences by default. A sentence over the profile's limit (default 25 words) needs a reason, and the reason is listed.
 3. Cut filler words and the profile's banned words.
-4. No recaps or signposting inside the section.
-5. Never change numbers, facts, citations or equations. The format of a number may change to meet the profile's number rule. Its value never changes.
+4. Cut recaps and signposts. A closing line that leads to the next section stays, even a wrong one, and is flagged for doc-flow.
+5. Never change numbers, facts, citations or equations. The format of a number may change to meet the profile's number rule. Its value never changes. Nothing inside an equation changes, not even its final comma, so the words around it are fitted to it.
 6. Never invent claims, results or citations. A new sentence may only restate what the section or the map already says, and it starts with [NEW].
 7. Never rewrite a keep passage. A keep light passage, or a chapter based on a paper, gets only the passes it allows.
 8. Follow the profile's voice, spelling, dash rule and house rules.
-9. Use the map's key terms. A symbol that differs from the notation table is flagged for notation-check, not changed.
-10. Material that belongs elsewhere is flagged for doc-flow, not moved.
+9. Use the map's key terms. Without a map, a thing with two names is flagged, not changed. A symbol that differs from the notation table, or stands for two things, is flagged for notation-check, not changed.
+10. Material that belongs elsewhere, or repeats other material, is flagged for doc-flow, not moved or cut.
 11. One section per run. A request for more gets the first section and a note to start a new chat for the next one.
 12. Before showing anything, run check_protected.py and doc_stats.py on the result. Fix every difference, or list it.
 
@@ -413,7 +417,7 @@ The same SKILL.md text finds them in both places: on claude.ai the skill folder 
    2. `read`: the paragraphs of one section (or all), numbered, with flags for equations, fields, footnotes, comments and tracked changes. Word comments come out as notes and keep marks.
    3. `apply`: takes a list of changes by paragraph number (replace, delete, insert, move, add heading) and writes them as tracked changes into a copy. Inside a replaced paragraph, only the changed words are marked. Everything else in the file stays byte for byte the same. It refuses a paragraph it cannot edit safely, and says why.
    4. `from-text`: builds a plain Word file from pasted or PDF text, so changes can be tracked against it.
-2. check_protected.py (human-write, doc-flow): compares text before and after. It reports any change to number values, citation keys, math, cross-references, labels, links and quotations. A number from a cut passage must appear elsewhere, or be listed.
+2. check_protected.py (human-write, doc-flow): compares text before and after. It reports any change to number values, citation keys, math, cross-references, labels, links and quotations. A number from a cut passage must appear elsewhere, or be listed. It reads Word files with all tracked changes accepted, so it can compare a file with its tracked copy.
 3. doc_stats.py (human-write, doc-flow, doc-check): words per section, sentences over the limit, banned words and dashes, for Word, LaTeX, Markdown and plain text.
 4. symbols.py (notation-check only): every symbol in LaTeX or Markdown math, with file, line and context.
 
@@ -557,7 +561,7 @@ How and where:
 2. The samples, planted.md and expected results. The profile template and the profile reference. Done on 28 September 2026.
 3. doc-setup. Done on 28 September 2026: it passed in Claude Code on both samples (tests/results/0.1-dev.md). The claude.ai run waits for the release test.
 4. The shared scripts and their unit tests. Done on 28 September 2026: 31 tests pass, on the samples and on a copy saved by LibreOffice.
-5. human-write. Test it on both samples, on the web and in Claude Code.
+5. human-write. Done on 28 September 2026: it passed in Claude Code on both samples, in Word, Markdown and LaTeX (tests/results/0.1-dev.md). One open point: it does not flag a result in a method section, so doc-flow must. The claude.ai run waits for the release test.
 6. doc-flow and the map. Test human-write again, now with a map.
 7. doc-check quick.
 8. The web guide and the README. Release v0.1 with doc-setup, human-write, doc-flow and doc-check quick. That is all the business writer needs.

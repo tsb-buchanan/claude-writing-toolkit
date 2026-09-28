@@ -43,6 +43,18 @@ class DocxTool(unittest.TestCase):
 
     # ------------------------------------------------------------ reading
 
+    def test_check_protected_reads_a_tracked_copy(self):
+        script = os.path.join(ROOT, "shared", "check_protected.py")
+        p18 = accepted(REPORT)[17]
+        code, _, out = self.apply([{"op": "replace", "para": 18, "text": p18.replace("twelve weeks", "12 weeks")}])
+        self.assertEqual(code, 0)
+        run = subprocess.run([sys.executable, script, REPORT, out], stdout=subprocess.PIPE, text=True)
+        self.assertEqual(run.returncode, 0, run.stdout)
+        self.assertIn('"twelve" to "12"', run.stdout)
+        self.apply([{"op": "replace", "para": 18, "text": p18.replace("225 orders", "250 orders")}])
+        run = subprocess.run([sys.executable, script, REPORT, out], stdout=subprocess.PIPE, text=True)
+        self.assertEqual(run.returncode, 1, run.stdout)
+
     def test_structure(self):
         doc = docx_tool.Doc(REPORT)
         self.assertEqual(len(doc.paras), 71)
