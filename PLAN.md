@@ -478,7 +478,7 @@ Notes:
 
 1. Output is more than half of the cost. That is why the skills cap their output and never repeat in the chat what the Word file shows.
 2. If claude.ai puts the whole uploaded file into the context on every upload, each human-write run reads about 10,000 tokens more. That adds about $0.08 per round on Sonnet and $0.14 on Opus. The spike measures this (section 14).
-3. The same round on a 10,000-word thesis chapter in Claude Code, with the standard budget: about $0.60 on Sonnet and $1.10 on Opus. Claude Code's own cached overhead comes on top, roughly $0.20 to $0.50.
+3. The same round on a 10,000-word thesis chapter in Claude Code, with the standard budget: about $0.60 on Sonnet and $1.10 on Opus. Claude Code's own overhead comes on top. The spike measured about $0.11 per short session on Sonnet, mostly cached reads of Claude Code's own instructions. That makes about $0.50 per round on Sonnet, and somewhat more on Opus.
 4. doc-check full mode on a 70,000-word thesis: roughly $3.50 on Sonnet and $5.50 on Opus (with extraction on Sonnet).
 5. On a claude.ai subscription the writer pays a fixed fee. The same tokens count against the plan's usage limits, so the same savings apply. claude.ai, the desktop app and Claude Code share one limit. Long chats, large files and file creation use it faster. Anthropic's own advice is to start a new chat when a chat gets long.
 
@@ -543,7 +543,7 @@ How and where:
 
 ## 14. Build order
 
-1. Spike, one day at most. Build a tiny test skill with a script. Upload it to claude.ai and install it in Claude Code. Confirm:
+1. Spike, one day at most, in spike/. Build a tiny test skill with a script. Upload it to claude.ai and install it in Claude Code. Record the results in spike/RESULTS.md. Delete the folder once the shared scripts exist. Confirm:
    1. which frontmatter fields claude.ai accepts besides name and description (we need one for the version);
    2. that a bundled script runs on claude.ai and returns a Word file to download;
    3. whether an uploaded Word file's whole text enters the context (this changes 10.4);
