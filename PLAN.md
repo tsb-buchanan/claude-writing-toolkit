@@ -553,7 +553,7 @@ How and where:
 ## 13. Distribution
 
 1. The plugin marketplace, the main route since 1.1. The repo is public. .claude-plugin/marketplace.json lists one plugin, writing-toolkit, whose source is the repo itself ("./"), and .claude-plugin/plugin.json names it. The plugin's skills are the folders in skills/. Nothing else in the repo is a plugin component, and the repo has no top-level bin/ folder, which claude.ai refuses.
-   1. claude.ai and the desktop app: Customize, Plugins, Add, Add marketplace, Add from a repository, then `tsb-buchanan/claude-writing-toolkit`. Sync automatically keeps the skills up to date. A plugin added on claude.ai also reaches Claude Code as a synced plugin.
+   1. claude.ai and the desktop app: Customize, Plugins, Add, Add marketplace, Add from a repository, then `tsb-buchanan/claude-writing-toolkit`. Sync automatically keeps the skills up to date. A plugin added on claude.ai also reaches Claude Code as a synced plugin. Cloud sessions (Claude Code on the web) have no `/plugin` command and ignore plugins in a repository's settings. They load the skills turned on at claude.ai, so a cloud user adds the toolkit there.
    2. Claude Code: `/plugin marketplace add tsb-buchanan/claude-writing-toolkit`, then `/plugin install writing-toolkit@writing-toolkit`. The skills are then named like `/writing-toolkit:human-write`. The profile stays in the writer's repo, so the switch needs no profile change.
    3. The marketplace serves main, so a merge to main is a release. Merge to main only after the release test. Raise the version in plugin.json with each release: Claude Code users get a new copy only when it changes.
 2. GitHub Releases, the other route. A version tag (for example v1.0.0) starts release.yml. It builds:

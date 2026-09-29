@@ -4,16 +4,28 @@ This guide is for writers who keep their document in a git repository: a thesis 
 
 ## Install
 
-Pick one of two ways.
+Pick one of three ways.
 
-1. As a plugin, straight from GitHub. In Claude Code, type `/plugin marketplace add tsb-buchanan/claude-writing-toolkit`, then `/plugin install writing-toolkit@writing-toolkit`, then `/reload-plugins`. Each skill then has the plugin's name in front, such as /writing-toolkit:human-write. This guide leaves the name out. New versions arrive when you run `/plugin marketplace update writing-toolkit`, or on their own once you turn on auto-update for the marketplace under Marketplaces in `/plugin`.
-2. From the zip. Download writing-toolkit-skills.zip from the toolkit's Releases page: https://github.com/tsb-buchanan/claude-writing-toolkit/releases. Unzip it into .claude/skills/ in your repository, for this document only: `unzip writing-toolkit-skills.zip -d .claude/skills/`. Or unzip it into ~/.claude/skills/, for all your projects.
+1. On claude.ai, if you use Claude Code on the web. Add the toolkit on claude.ai, as docs/web-guide.md shows in Part 1, Route A. A cloud session has no `/plugin` command, and it does not install plugins from a repository's settings. It loads the skills you turned on at claude.ai, so every cloud session has the toolkit. A terminal signed in with the same claude.ai account gets it too, as a synced plugin.
+2. As a plugin, in a terminal, straight from GitHub. In Claude Code, type `/plugin marketplace add tsb-buchanan/claude-writing-toolkit`, then `/plugin install writing-toolkit@writing-toolkit`, then `/reload-plugins`. Each skill then has the plugin's name in front, such as /writing-toolkit:human-write. This guide leaves the name out. New versions arrive when you run `/plugin marketplace update writing-toolkit`, or on their own once you turn on auto-update for the marketplace under Marketplaces in `/plugin`.
+3. From the zip. Download writing-toolkit-skills.zip from the toolkit's Releases page: https://github.com/tsb-buchanan/claude-writing-toolkit/releases. Unzip it into .claude/skills/ in your repository, for this document only: `unzip writing-toolkit-skills.zip -d .claude/skills/`. Or unzip it into ~/.claude/skills/, for all your projects. For cloud sessions, commit the skill folders in .claude/skills/, because a cloud session starts from a fresh clone.
 
 Then:
 
 1. Start Claude Code in the repository, and type `/`. You should see doc-setup, doc-flow, human-write, doc-check and notation-check.
 2. Install in one place only. If you added the toolkit on claude.ai with the same account, Claude Code already has it, as a synced plugin. Skills you uploaded on claude.ai show up with names such as anthropic-skills:human-write. Two copies of a skill make it unclear which one runs. Keep one of them.
 3. The scripts need Python 3 and nothing else.
+
+### Switch from an older copy
+
+If a repository holds an older copy of the toolkit, or your own commands for the same jobs:
+
+1. Add the new version first, in one of the ways above.
+2. Delete the old skill folders from .claude/skills/: doc-setup, doc-flow, human-write, doc-check and notation-check. On claude.ai, delete the skills you uploaded, under Customize, then Skills.
+3. Look at your own commands in .claude/commands/. Delete each one that does the same job as a toolkit skill, so that one tool does each job. Keep the rest.
+4. Keep doc-profile.md. Version 1.1 reads it unchanged. If your own style notes hold rules that the skills should follow, add them to the profile's house rules with /doc-setup.
+5. Check CLAUDE.md for lines that point to deleted commands, and update them.
+6. Start a new session, type `/`, and check that each skill appears once.
 
 ## Set up once with /doc-setup
 
