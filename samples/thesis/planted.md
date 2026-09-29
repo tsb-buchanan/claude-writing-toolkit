@@ -32,6 +32,9 @@ LaTeX writes an en dash as two hyphens, so the planted en dash (TH11) is plain A
 | TH15 | Filler and banned words: "It is worth noting", "clearly", "very"; and "clearly" inside the keep light section. | 3.3, paragraph 2; 3.4, paragraph 2 | Cut them. In 3.4, only by a light pass. |
 | TH16 | A sentence far over 25 words (63 words, around Equation eq:wq). | 3.3, paragraph 2 | Split it without touching the equation. |
 | TH17 | A claim without a source. | 3.1, paragraph 1 ("Most tool libraries in the region report the same problem.") | Needs a source, or a softer claim. |
+| TH18 | A metaphor for what the model shows: the desk is "half asleep". Added in 1.1. | 3.3, paragraph 3 ("At this load the desk is half asleep.") | Say it in literal words, from what the paragraph reports (about 0.67 borrowers at the desk area), or flag it. Add no new number, such as a share of idle time. |
+| TH19 | A pointer to "earlier studies" that names no work. Added in 1.1. | 3.3, paragraph 1 ("Earlier studies of public service desks use the same target.") | Needs a citation, or the sentence goes. A rewrite must not invent a citation. |
+| TH20 | A closing comment on what a result means, at the end of a paragraph. Added in 1.1. | 3.3, paragraph 3 ("This result shows the wider value of queueing models for community services.") | Cut it. The conclusion says what the results mean. |
 
 ## Also in the chapter, and not a problem
 

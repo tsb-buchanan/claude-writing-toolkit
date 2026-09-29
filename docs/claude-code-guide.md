@@ -4,11 +4,16 @@ This guide is for writers who keep their document in a git repository: a thesis 
 
 ## Install
 
-1. Download writing-toolkit-skills.zip from the toolkit's Releases page: https://github.com/tsb-buchanan/claude-writing-toolkit/releases
-2. Unzip it into .claude/skills/ in your repository, for this document only: `unzip writing-toolkit-skills.zip -d .claude/skills/`. Or unzip it into ~/.claude/skills/, for all your projects.
-3. Start Claude Code in the repository, and type `/`. You should see /doc-setup, /doc-flow, /human-write, /doc-check and /notation-check.
-4. Install in one place only. If you also uploaded the skills on claude.ai with the same account, Claude Code may already list them, with names such as anthropic-skills:human-write. Two copies with different names make it unclear which one runs. Keep one of them.
-5. The scripts need Python 3 and nothing else.
+Pick one of two ways.
+
+1. As a plugin, straight from GitHub. In Claude Code, type `/plugin marketplace add tsb-buchanan/claude-writing-toolkit`, then `/plugin install writing-toolkit@writing-toolkit`, then `/reload-plugins`. Each skill then has the plugin's name in front, such as /writing-toolkit:human-write. This guide leaves the name out. New versions arrive when you run `/plugin marketplace update writing-toolkit`, or on their own once you turn on auto-update for the marketplace under Marketplaces in `/plugin`.
+2. From the zip. Download writing-toolkit-skills.zip from the toolkit's Releases page: https://github.com/tsb-buchanan/claude-writing-toolkit/releases. Unzip it into .claude/skills/ in your repository, for this document only: `unzip writing-toolkit-skills.zip -d .claude/skills/`. Or unzip it into ~/.claude/skills/, for all your projects.
+
+Then:
+
+1. Start Claude Code in the repository, and type `/`. You should see doc-setup, doc-flow, human-write, doc-check and notation-check.
+2. Install in one place only. If you added the toolkit on claude.ai with the same account, Claude Code already has it, as a synced plugin. Skills you uploaded on claude.ai show up with names such as anthropic-skills:human-write. Two copies of a skill make it unclear which one runs. Keep one of them.
+3. The scripts need Python 3 and nothing else.
 
 ## Set up once with /doc-setup
 
@@ -22,7 +27,7 @@ docs/profile-reference.md explains every field of the profile.
 ## The cycle
 
 1. `/doc-flow chapters/ch3.tex`: a report on the structure, saved in doc-notes/plans/. Reply with the moves you approve. It shows the moves as a diff, and changes the file after your second approval. Then it writes the map, doc-notes/doc-map.md. `/doc-flow map only chapters/ch3.tex` writes just the map.
-2. `/human-write chapters/ch3.tex "3.2"`: rewrites one section. Name the section by its heading or its number. Add "light" for small fixes only.
+2. `/human-write chapters/ch3.tex "3.2"`: rewrites one section. Name the section by its heading or its number. Add "light" for small fixes only. It changes only what a rule in the skill or your profile asks for, never just to sound more human. docs/sources.md says where the rules come from.
 3. `/notation-check`, for a thesis: the symbol table in doc-notes/notation.md, a report, and fixes to symbols in math after you approve.
 4. `/doc-check chapters/ch3.tex`: the top 10 issues, saved in doc-notes/checks/. `/doc-check full` runs full mode (below).
 

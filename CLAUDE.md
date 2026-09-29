@@ -35,3 +35,4 @@ A CLAUDE.md in a parent folder may belong to another project. Its setup steps an
 5. samples/: an invented report and an invented thesis chapter, each with a list of the problems planted in it and the profile the tests use. tools/build_samples.py builds their Markdown, Word and PDF files into built/.
 6. tests/: automatic checks, expected results and the results of each release test.
 7. tools/: scripts that build the samples, sync shared files and build the release zips.
+8. .claude-plugin/: the marketplace and plugin manifests, so claude.ai and Claude Code install the skills straight from GitHub. The marketplace serves main, so a merge to main is a release.

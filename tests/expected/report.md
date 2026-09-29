@@ -55,13 +55,17 @@ Must change:
 3. Cut the recap (RP09).
 4. Write "we" for "I think" (RP16).
 5. With a map: write "crates" for "totes" (RP04). Without a map: flag it.
+6. Say in literal words what the washing station did (RP22), or flag the metaphor. Add no new fact.
+7. Cut the closing comment on what the result means (RP23), and list it as removed.
 
 Must flag, not change:
 
 1. The repeated paragraph (RP05), for doc-flow.
 2. The broken handoff (RP10). It must not invent a new handoff sentence.
 
-Must leave alone: the table (RP18) and the value of every number in the section.
+Must leave alone: the table (RP18), the value of every number in the section, and the limit in Cost per order, paragraph 3: the cost per order is higher if the crates wear out before 200 uses. It may be split, but not cut or softened.
+
+May: cut "In addition," at the start of Returns and losses, paragraph 3 (RP20). One copy in the section is not yet a repeat.
 
 ### Both runs
 
@@ -101,22 +105,23 @@ The map:
 
 ## doc-check quick
 
-The ten issues its checklist should find, in any order:
+The eleven issues its checklist should find, in any order:
 
 1. RP01: the main message is not up front.
 2. RP02: 18,400 against 18,900 orders.
 3. RP03: 84% against 81%.
-4. RP11: the claim without a source.
+4. RP11 and RP21: the claim without a source, and the pointer to "earlier studies". One line for both is fine. The item counts only if RP21 is there.
 5. RP04: "totes" and "crates".
 6. RP07: the long sentences.
 7. RP06: the banned words.
 8. RP08 and RP09: the signpost and the recap, as one style issue or two.
 9. RP12: the em dash.
 10. RP15: the number format slips.
+11. RP20: "In addition," opens three paragraphs.
 
-RP16 (the voice slip) may appear in place of one of them.
+RP16 (the voice slip) may appear in place of one of them. The small style slips (RP06, RP08, RP09, RP12, RP15, RP16 and RP20) may share one or two lines.
 
-Pass: at least 8 of the 10 appear, and no more than 10 issues are shown. Each issue gives its section, a short quote, why it matters and a next step. Nothing is written to the document. In Claude Code, the report is saved in doc-notes/checks/.
+Pass: at least 9 of the 11 appear, and no more than 10 issues are shown. Each issue gives its section, a short quote, why it matters and a next step. Nothing is written to the document. In Claude Code, the report is saved in doc-notes/checks/.
 
 ## doc-check full (Claude Code only)
 

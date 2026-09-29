@@ -1,6 +1,6 @@
 # PLAN
 
-Status: approved on 28 September 2026. Build steps 1 to 11 were done on the same day (section 14). Every skill passed its tests on claude.ai and in Claude Code. The release waits for the writer's go-ahead.
+Status: approved on 28 September 2026. Build steps 1 to 11 were done on the same day (section 14), and v1.0.0 was released. Step 12, version 1.1, adds rules from three research papers (docs/sources.md). Step 13 makes the public repo a plugin marketplace, so claude.ai and Claude Code install the skills straight from GitHub.
 This plan replaces the earlier plan, which built slash commands for Claude Code only.
 
 ## 1. Goal
@@ -72,6 +72,9 @@ claude-writing-toolkit/
   CLAUDE.md
   PLAN.md
   LICENSE
+  .claude-plugin/
+    marketplace.json            the marketplace: one plugin, writing-toolkit, whose source is the repo itself
+    plugin.json                 the plugin's name, version and description
   skills/                       what users install
     doc-setup/
       SKILL.md
@@ -101,7 +104,7 @@ claude-writing-toolkit/
   shared/                       the one source for files that several skills need
     docx_tool.py                reads Word files and writes tracked changes
     check_protected.py          compares numbers, citations and math before and after
-    doc_stats.py                words, long sentences, banned words and dashes per section
+    doc_stats.py                words, long sentences, banned words, dashes and repeated openings per section
     word-output.md
     text-output.md
   templates/
@@ -113,6 +116,7 @@ claude-writing-toolkit/
     web-guide.md                source of the Word guide; each release builds web-guide.docx
     claude-code-guide.md
     profile-reference.md        every field, its defaults per mode, which skills read it
+    sources.md                  the research behind some rules, and the ideas the toolkit does not take
   samples/
     report/                     source.md, planted.md and doc-profile.md; built/ holds report.md, .docx and .pdf
     thesis/                     the LaTeX chapter, a stub of the chapter before it, refs.bib, planted.md and
@@ -164,6 +168,7 @@ What a Claude Code writer's repo holds after setup:
 9. Keep the output within the caps in section 10.
 10. A read-only skill says so in its first line.
 11. Claude Code: one commit per run that writes files, unless the profile says `commit: no`. Never push.
+12. Change text only when a rule asks for it. Never edit to make text sound more human or to get past an AI detector (docs/sources.md).
 
 ## 6. The skills
 
@@ -219,15 +224,17 @@ Rules:
 1. Lead each paragraph with its claim.
 2. Short sentences by default. A sentence over the profile's limit (default 25 words) needs a reason, and the reason is listed.
 3. Cut filler words and the profile's banned words.
-4. Cut recaps and signposts. A closing line that leads to the next section stays, even a wrong one, and is flagged for doc-flow.
-5. Never change numbers, facts, citations or equations. The format of a number may change to meet the profile's number rule. Its value never changes. Nothing inside an equation changes, not even its final comma, so the words around it are fitted to it.
+4. Cut recaps and signposts. A closing line that leads to the next section stays, even a wrong one, and is flagged for doc-flow. What a result means is said once, where the section concludes, not at the end of each paragraph.
+5. Never change numbers, facts, citations or equations. The format of a number may change to meet the profile's number rule. Its value never changes. Nothing inside an equation changes, not even its final comma, so the words around it are fitted to it. A stated limitation is never cut or softened.
 6. Never invent claims, results or citations. A new sentence may only restate what the section or the map already says, and it starts with [NEW].
 7. Never rewrite a keep passage. A keep light passage, or a chapter based on a paper, gets only the passes it allows.
 8. Follow the profile's voice, spelling, dash rule and house rules.
-9. Use the map's key terms. Without a map, a thing with two names is flagged, not changed. A symbol that differs from the notation table, or stands for two things, is flagged for notation-check, not changed.
-10. Material that belongs elsewhere, or repeats other material, is flagged for doc-flow, not moved or cut.
-11. One section per run. A request for more gets the first section and a note to start a new chat for the next one.
-12. Before showing anything, run check_protected.py and doc_stats.py on the result. Fix every difference, or list it.
+9. Say what a method, a model or a process does in literal words, not in a metaphor such as "the model struggles". If the section does not say, the metaphor is flagged.
+10. Use the map's key terms. Without a map, a thing with two names is flagged, not changed. A symbol that differs from the notation table, or stands for two things, is flagged for notation-check, not changed.
+11. Material that belongs elsewhere, or repeats other material, is flagged for doc-flow, not moved or cut.
+12. One section per run. A request for more gets the first section and a note to start a new chat for the next one.
+13. Before showing anything, run check_protected.py and doc_stats.py on the result. Fix every difference, or list it. Ask of each paragraph whether it does the section's job, and whether it names something specific: a case, a number, a name or a source. Flag it if not.
+14. Every change follows one of these rules or the profile. "Sounds more human" is never a reason (section 5, rule 12).
 
 Output, in both places: the rewrite with its [NEW] marks, then these lists. One line per item. Empty lists are left out.
 
@@ -235,7 +242,7 @@ Output, in both places: the rewrite with its [NEW] marks, then these lists. One 
 2. Removed sentences, and where their content went.
 3. Sentences whose meaning could have shifted: old and new, side by side.
 4. Long sentences kept: word count and reason.
-5. Flags for other skills.
+5. Flags, for the writer or for another skill.
 
 | | Web | Claude Code |
 |---|---|---|
@@ -295,9 +302,9 @@ Quick mode is the default. Both users, web and Claude Code.
    1. The main message is clear and up front.
    2. Numbers agree across sections, and with the map.
    3. Terms are used the same way throughout.
-   4. Claims that need a source and have none.
+   4. Claims that need a source and have none, and pointers such as "previous studies" that name no work.
    5. The length suits the audience and the target.
-   6. The profile's style rules: sentence limit, banned words, dashes, number format, voice, leftover [NEW] marks. doc_stats.py counts these.
+   6. The profile's style rules: sentence limit, banned words, dashes, number format, voice, leftover [NEW] marks, and paragraph openings used three times or more. doc_stats.py counts these.
 4. Output: the top 10 issues only, most important first. Each gives the section, the words it is about (a short quote), why it matters in one line, and a next step: a skill to run or a decision for the writer. One more line gives the count of smaller issues not shown.
 
 | | Web | Claude Code |
@@ -421,7 +428,7 @@ The same SKILL.md text finds them in both places: on claude.ai the skill folder 
    3. `apply`: takes a list of changes by paragraph number (replace, delete, insert, move, add heading) and writes them as tracked changes into a copy. Inside a replaced paragraph, only the changed words are marked. Everything else in the file stays byte for byte the same. It refuses a paragraph it cannot edit safely, and says why.
    4. `from-text`: builds a plain Word file from pasted or PDF text, so changes can be tracked against it.
 2. check_protected.py (human-write, doc-flow): compares text before and after. It reports any change to number values, citation keys, math, cross-references, labels, links and quotations. A number from a cut passage must appear elsewhere, or be listed. It reads Word files with all tracked changes accepted, so it can compare a file with its tracked copy.
-3. doc_stats.py (human-write, doc-flow, doc-check): words per section, sentences over the limit, banned words and dashes, for Word, LaTeX, Markdown and plain text.
+3. doc_stats.py (human-write, doc-flow, doc-check): words per section, sentences over the limit, banned words, dashes, and paragraph openings used three times or more, for Word, LaTeX, Markdown and plain text.
 4. symbols.py (notation-check only): every symbol in LaTeX or Markdown math, with file, line and context.
 
 Real Word files are messy. The first version edits plain paragraphs and headings only. Tables, text boxes and paragraphs with equations or fields stay as they are, and the proposal goes into the chat.
@@ -503,15 +510,15 @@ Two invented samples, written for this repo. Never a real user document. They ar
 
 Each sample has planted.md, which lists every planted problem, where it is and what is right.
 
-1. Report: the main message buried at the end; two numbers that differ between sections; one concept under two names; a repeated paragraph; filler and banned words; sentences over 25 words; a recap and a signpost; a broken handoff; a result in the method section; a claim without a source; an em dash; number format slips; a voice slip; a quoted clause marked keep; a Word comment whose note goes against what doc-flow would suggest; a table and a footnote the script must leave alone.
-2. Chapter: the chapter's claim only at the end; a symbol variant; a symbol clash; a symbol used before its definition; an equation, a citation and a cross-reference inside text that needs rewriting; a section from a published paper, marked keep light; voice slips; a repeated paragraph; a broken handoff; a result in the method section; an en dash range; a broken house rule; a number format slip; a claim without a source; and a false alarm: two terms that look inconsistent but name two different things.
+1. Report: the main message buried at the end; two numbers that differ between sections; one concept under two names; a repeated paragraph; filler and banned words; sentences over 25 words; a recap and a signpost; a broken handoff; a result in the method section; a claim without a source; an em dash; number format slips; a voice slip; a quoted clause marked keep; a Word comment whose note goes against what doc-flow would suggest; a table and a footnote the script must leave alone. Added in 1.1: a linking phrase that opens three paragraphs; a pointer to "earlier studies" that names no work; a metaphor for what a machine did; a closing comment on what a result means.
+2. Chapter: the chapter's claim only at the end; a symbol variant; a symbol clash; a symbol used before its definition; an equation, a citation and a cross-reference inside text that needs rewriting; a section from a published paper, marked keep light; voice slips; a repeated paragraph; a broken handoff; a result in the method section; an en dash range; a broken house rule; a number format slip; a claim without a source; and a false alarm: two terms that look inconsistent but name two different things. Added in 1.1: a pointer to "earlier studies" that names no work; a metaphor for what the model shows; a closing comment on what a result means.
 
 tests/expected/ says, per skill and sample, what the skill must find, what it must change and what it must leave alone.
 
 Pass criteria:
 
 1. doc-setup: finishes in three rounds or fewer; the profile fits on one page; report mode leaves out thesis fields; a rerun shows a diff.
-2. human-write: fixes every planted style problem in the section; check_protected.py finds no change to numbers, citations, equations, cross-references or keep passages; every new sentence has [NEW]; every list is complete against planted.md; the Word file opens in Word and LibreOffice and shows tracked changes; nothing outside the section changes; in Claude Code, nothing is written before approval.
+2. human-write: fixes every planted style problem in the section; check_protected.py finds no change to numbers, citations, equations, cross-references or keep passages; every stated limitation stays; every new sentence has [NEW]; every list is complete against planted.md; the Word file opens in Word and LibreOffice and shows tracked changes; nothing outside the section changes; in Claude Code, nothing is written before approval.
 3. doc-flow: finds the buried message, the repetition, the broken handoff and the misplaced result; follows the writer's note over its own suggestion; applies only structural moves; loses no fact; the map fits on one page and has the right key numbers.
 4. doc-check quick: finds at least 80% of the issues that tests/expected lists for its checklist; shows no more than 10; changes nothing.
 5. doc-check full: finds every planted problem; rejects the false alarm; compares correctly with an earlier report.
@@ -529,7 +536,7 @@ How and where:
 
 1. The web guide: a Word document for a non-technical reader. The text lives in docs/web-guide.md. Each release builds web-guide.docx from it and attaches it. Each screenshot place is a line of its own, like "[Screenshot 4: the Skills page, with the upload button circled]". Parts:
    1. What you need: a claude.ai account with code execution turned on. It is on by default, and skills work on every plan.
-   2. Install the skills: download the zips and upload them.
+   2. Install the skills: add the repo as a plugin marketplace, or upload the zips.
    3. Make a Project for your document.
    4. Run doc-setup. Paste the profile into the Project's instructions.
    5. Fix the structure with doc-flow. Review the tracked changes in Word. Add the map to the Project.
@@ -540,18 +547,23 @@ How and where:
    10. When something goes wrong.
 2. The Claude Code guide (docs/claude-code-guide.md): install, /doc-setup, the cycle, the files in doc-notes/, approvals and commits, models and cost, full mode, troubleshooting.
 3. The profile reference (docs/profile-reference.md): every field, its defaults per mode, and which skills read it.
-4. The README, five lines: what the toolkit is, who it is for, how to start on the web, how to start in Claude Code, and the license.
+4. The README, five lines: what the toolkit is, who it is for, how to start on the web, how to start in Claude Code, and the license. The license line also points to the sources.
+5. The sources (docs/sources.md): the research papers behind some rules, what each found, the rules the toolkit takes from it, and the ideas it does not take.
 
 ## 13. Distribution
 
-1. GitHub Releases. A version tag (for example v1.0.0) starts release.yml. It builds:
+1. The plugin marketplace, the main route since 1.1. The repo is public. .claude-plugin/marketplace.json lists one plugin, writing-toolkit, whose source is the repo itself ("./"), and .claude-plugin/plugin.json names it. The plugin's skills are the folders in skills/. Nothing else in the repo is a plugin component, and the repo has no top-level bin/ folder, which claude.ai refuses.
+   1. claude.ai and the desktop app: Customize, Plugins, Add, Add marketplace, Add from a repository, then `tsb-buchanan/claude-writing-toolkit`. Sync automatically keeps the skills up to date. A plugin added on claude.ai also reaches Claude Code as a synced plugin.
+   2. Claude Code: `/plugin marketplace add tsb-buchanan/claude-writing-toolkit`, then `/plugin install writing-toolkit@writing-toolkit`. The skills are then named like `/writing-toolkit:human-write`. The profile stays in the writer's repo, so the switch needs no profile change.
+   3. The marketplace serves main, so a merge to main is a release. Merge to main only after the release test. Raise the version in plugin.json with each release: Claude Code users get a new copy only when it changes.
+2. GitHub Releases, the other route. A version tag (for example v1.0.0) starts release.yml. It builds:
    1. One zip per skill, for claude.ai. Each holds one skill folder, named exactly like the skill, with its SKILL.md inside.
    2. One zip with all five skills, for Claude Code.
    3. web-guide.docx.
-2. Web install: upload each zip under Customize, Skills. A Team or Enterprise owner can upload them once in the organization settings, and they are then on for everyone.
-3. Claude Code install: unzip into .claude/skills/ in the repo, or into ~/.claude/skills/ for all projects. A writer who uploaded the skills on claude.ai may already have them: Claude Code signed in with the same account syncs them, with the prefix `anthropic-skills:` (seen in the spike). The guide says to install in one place only, so there are never two copies with different names.
-4. Later, a Claude Code plugin from this repo: add .claude-plugin/plugin.json and a marketplace file. Writers run `/plugin marketplace add <owner>/<repo>` and then `/plugin install`. The skills are then named like `/<plugin>:human-write`. The profile stays in the writer's repo, so the switch needs no profile change.
-5. Versions: each SKILL.md carries the toolkit version in its metadata, and so does the profile. claude.ai shows that version on the skill's page. doc-setup offers to update an older profile.
+3. Web install from the zips: upload each zip under Customize, Skills. A Team or Enterprise owner can upload them once in the organization settings, and they are then on for everyone.
+4. Claude Code install from the zip: unzip into .claude/skills/ in the repo, or into ~/.claude/skills/ for all projects.
+5. Install in one place only, so there are never two copies with different names. Skills uploaded on claude.ai reach Claude Code with the prefix `anthropic-skills:` (seen in the spike), and plugin skills with the prefix `writing-toolkit:`. The guides say to remove uploaded copies before adding the marketplace.
+6. Versions: each SKILL.md carries the toolkit version in its metadata, such as "1.1", and plugin.json carries it as "1.1.0". tools/check_repo.py checks that they agree. The profile carries the version of its own format. claude.ai shows the version on the skill's page. doc-setup offers to update an older profile.
 
 ## 14. Build order
 
@@ -571,7 +583,8 @@ How and where:
 9. doc-check full mode. Done on 28 September 2026: it passed in Claude Code on Opus on both samples, twice each (tests/results/0.1-dev.md).
 10. notation-check. Done on 28 September 2026: it passed in Claude Code on the sample thesis, and stopped in report mode (tests/results/0.1-dev.md). Open point: it did not find $W$ used before its definition (TH04). The claude.ai run waits for the release test.
 11. The Claude Code guide, a full release test, and release v1.0. The guide and the release test were done on 28 September 2026: the Claude Code part by Claude, and the claude.ai part (tests/web-test.md) by the writer (tests/results/0.1-dev.md). The release waits for the writer's go-ahead.
-12. Later: the plugin.
+12. Version 1.1: the rules from three research papers, which the writer's notes on them adopt (docs/sources.md). human-write gets five rules: change only what a rule asks for; never cut or soften a limitation; say what a result means once; literal words, not metaphors; flag a paragraph that names nothing specific. doc-check reports pointers to "previous studies" that name no work, and repeated paragraph openings, which doc_stats.py lists. The samples get new planted problems for these rules. Test human-write and doc-check again, in Claude Code and on claude.ai. The Claude Code runs were done on 28 September 2026 (tests/results/1.1.md). The claude.ai runs wait for the writer.
+13. The plugin marketplace, with version 1.1: .claude-plugin/marketplace.json and plugin.json, a check in tools/check_repo.py, and the install steps in both guides and the README. Test it in Claude Code: validate it, install it from the repo, and run a skill through it. Then the writer adds it on claude.ai for the 1.1 web test.
 
 ## 15. Decisions
 
@@ -581,12 +594,12 @@ Decided on 28 September 2026:
 2. The budget setting stays visible: `budget` (auto, lean, standard) in the profile. "Lean by default for reports and on the web" is one switch the writer can see and change.
 3. Verifiers in full mode take up to five findings each, from one chapter. One verifier per finding would be stricter, but it would cost about twice as much for that stage.
 4. The repo is renamed claude-writing-toolkit, because the toolkit serves reports as well as theses. GitHub redirects the old name.
+5. Rules from research: the writer's notes on three papers adopt seven rules and reject four ideas. The toolkit follows the notes. The rejected ideas (varying sentence length or word choice to look less like a machine, varying paragraph length on purpose, irregular structure, devices of fiction) stay out, and docs/sources.md says why.
 
 ## 16. Later
 
-1. The Claude Code plugin.
-2. Reviewer responses: turn reviewer comments into a response table, and apply approved changes under human-write's rules.
-3. A citation check: every citation resolves, and every claim that needs a source has one.
-4. A figure and table check: every figure is referenced in the text and has a caption that stands alone.
-5. [NEW] marks as Word comments instead of text.
-6. Languages other than English.
+1. Reviewer responses: turn reviewer comments into a response table, and apply approved changes under human-write's rules.
+2. A citation check: every citation resolves, and every claim that needs a source has one.
+3. A figure and table check: every figure is referenced in the text and has a caption that stands alone.
+4. [NEW] marks as Word comments instead of text.
+5. Languages other than English.

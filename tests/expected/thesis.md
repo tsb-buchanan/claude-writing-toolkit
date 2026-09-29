@@ -30,8 +30,12 @@ Must change:
 
 1. Cut "It is worth noting", "clearly" and "very" (TH15).
 2. Split the 63-word sentence (TH16) without touching Equation eq:wq.
+3. Cut the closing comment on what the result means (TH20), and list it as removed.
+4. Replace "half asleep" (TH18) with literal words from what the paragraph reports, or flag it. Add no new number.
 
 Must flag, not change: $N$ in Equation eq:little and in "$N = 0.67$" (TH03), for notation-check.
+
+Must not: invent a citation for "Earlier studies" (TH19). Flagging it for the writer is right.
 
 Must leave alone:
 
@@ -88,7 +92,7 @@ The map:
 The seven issues its checklist should find, in any order:
 
 1. TH01: the claim is not up front.
-2. TH17: the claim without a source.
+2. TH17 and TH19: the claim without a source, and the pointer to "earlier studies". One line for both is fine. The item counts only if TH19 is there.
 3. TH07: the voice slips.
 4. TH15: the banned words.
 5. TH16: the long sentences.

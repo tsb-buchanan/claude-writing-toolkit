@@ -22,7 +22,7 @@ Launch one subagent per file, all at once, with model sonnet. For a report of on
 > 3. NUMBERS: each number a reader must get right: the value, what it is, where.
 > 4. TERMS: each key term, and any other name used for the same thing.
 > 5. SYMBOLS: each math symbol, what it stands for, and where it is first used.
-> 6. SOURCES: claims about the world beyond this work that have no citation.
+> 6. SOURCES: claims about the world beyond this work that have no citation, and pointers such as "previous studies" that name no work.
 > 7. HANDOFFS: lines that point to another section or chapter, and what they say is there.
 
 ## 3. Review
@@ -35,8 +35,8 @@ Launch one subagent per dimension, all at once, with the session's model:
 4. Numbers: across sections and chapters, and against the map.
 5. Terms: against the map's key terms.
 6. Notation, in thesis mode only: symbols across chapters, against the notation source.
-7. Claims and sources.
-8. Style and voice: the profile's style guide, with the doc_stats.py output.
+7. Claims and sources, including pointers such as "previous studies" that name no work.
+8. Style and voice: the profile's style guide, with the doc_stats.py output, including the openings that start three or more paragraphs.
 9. House rules, and in thesis mode with `contribution: yes`, who did what in a chapter based on a paper.
 
 Give each this prompt, filled in:
