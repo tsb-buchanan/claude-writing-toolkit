@@ -1,0 +1,16 @@
+{
+  "name": "writing-toolkit",
+  "description": "Skills for Claude that help one writer turn a rough draft of a thesis, report or paper into a clear one.",
+  "owner": {
+    "name": "tsb-buchanan",
+    "url": "https://github.com/tsb-buchanan"
+  },
+  "plugins": [
+    {
+      "name": "writing-toolkit",
+      "source": "./",
+      "description": "doc-setup, doc-flow, human-write, doc-check and notation-check: structure, style and checks for long documents, with every change shown for approval first.",
+      "category": "writing"
+    }
+  ]
+}

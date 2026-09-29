@@ -1,0 +1,14 @@
+{
+  "name": "writing-toolkit",
+  "displayName": "Writing toolkit",
+  "version": "1.1.0",
+  "description": "Five skills that help one writer turn a rough draft of a thesis, report or paper into a clear one, with every change shown for approval first.",
+  "author": {
+    "name": "tsb-buchanan",
+    "url": "https://github.com/tsb-buchanan"
+  },
+  "homepage": "https://github.com/tsb-buchanan/claude-writing-toolkit",
+  "repository": "https://github.com/tsb-buchanan/claude-writing-toolkit",
+  "license": "MIT",
+  "keywords": ["writing", "thesis", "report", "editing", "word"]
+}

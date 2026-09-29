@@ -1,6 +1,6 @@
 # PLAN
 
-Status: approved on 28 September 2026. Build steps 1 to 11 were done on the same day (section 14), and v1.0.0 was released. Step 12, version 1.1, adds rules from three research papers (docs/sources.md).
+Status: approved on 28 September 2026. Build steps 1 to 11 were done on the same day (section 14), and v1.0.0 was released. Step 12, version 1.1, adds rules from three research papers (docs/sources.md). Step 13 makes the public repo a plugin marketplace, so claude.ai and Claude Code install the skills straight from GitHub.
 This plan replaces the earlier plan, which built slash commands for Claude Code only.
 
 ## 1. Goal
@@ -72,6 +72,9 @@ claude-writing-toolkit/
   CLAUDE.md
   PLAN.md
   LICENSE
+  .claude-plugin/
+    marketplace.json            the marketplace: one plugin, writing-toolkit, whose source is the repo itself
+    plugin.json                 the plugin's name, version and description
   skills/                       what users install
     doc-setup/
       SKILL.md
@@ -533,7 +536,7 @@ How and where:
 
 1. The web guide: a Word document for a non-technical reader. The text lives in docs/web-guide.md. Each release builds web-guide.docx from it and attaches it. Each screenshot place is a line of its own, like "[Screenshot 4: the Skills page, with the upload button circled]". Parts:
    1. What you need: a claude.ai account with code execution turned on. It is on by default, and skills work on every plan.
-   2. Install the skills: download the zips and upload them.
+   2. Install the skills: add the repo as a plugin marketplace, or upload the zips.
    3. Make a Project for your document.
    4. Run doc-setup. Paste the profile into the Project's instructions.
    5. Fix the structure with doc-flow. Review the tracked changes in Word. Add the map to the Project.
@@ -549,14 +552,18 @@ How and where:
 
 ## 13. Distribution
 
-1. GitHub Releases. A version tag (for example v1.0.0) starts release.yml. It builds:
+1. The plugin marketplace, the main route since 1.1. The repo is public. .claude-plugin/marketplace.json lists one plugin, writing-toolkit, whose source is the repo itself ("./"), and .claude-plugin/plugin.json names it. The plugin's skills are the folders in skills/. Nothing else in the repo is a plugin component, and the repo has no top-level bin/ folder, which claude.ai refuses.
+   1. claude.ai and the desktop app: Customize, Plugins, Add, Add marketplace, Add from a repository, then `tsb-buchanan/claude-writing-toolkit`. Sync automatically keeps the skills up to date. A plugin added on claude.ai also reaches Claude Code as a synced plugin.
+   2. Claude Code: `/plugin marketplace add tsb-buchanan/claude-writing-toolkit`, then `/plugin install writing-toolkit@writing-toolkit`. The skills are then named like `/writing-toolkit:human-write`. The profile stays in the writer's repo, so the switch needs no profile change.
+   3. The marketplace serves main, so a merge to main is a release. Merge to main only after the release test. Raise the version in plugin.json with each release: Claude Code users get a new copy only when it changes.
+2. GitHub Releases, the other route. A version tag (for example v1.0.0) starts release.yml. It builds:
    1. One zip per skill, for claude.ai. Each holds one skill folder, named exactly like the skill, with its SKILL.md inside.
    2. One zip with all five skills, for Claude Code.
    3. web-guide.docx.
-2. Web install: upload each zip under Customize, Skills. A Team or Enterprise owner can upload them once in the organization settings, and they are then on for everyone.
-3. Claude Code install: unzip into .claude/skills/ in the repo, or into ~/.claude/skills/ for all projects. A writer who uploaded the skills on claude.ai may already have them: Claude Code signed in with the same account syncs them, with the prefix `anthropic-skills:` (seen in the spike). The guide says to install in one place only, so there are never two copies with different names.
-4. Later, a Claude Code plugin from this repo: add .claude-plugin/plugin.json and a marketplace file. Writers run `/plugin marketplace add <owner>/<repo>` and then `/plugin install`. The skills are then named like `/<plugin>:human-write`. The profile stays in the writer's repo, so the switch needs no profile change.
-5. Versions: each SKILL.md carries the toolkit version in its metadata, and so does the profile. claude.ai shows that version on the skill's page. doc-setup offers to update an older profile.
+3. Web install from the zips: upload each zip under Customize, Skills. A Team or Enterprise owner can upload them once in the organization settings, and they are then on for everyone.
+4. Claude Code install from the zip: unzip into .claude/skills/ in the repo, or into ~/.claude/skills/ for all projects.
+5. Install in one place only, so there are never two copies with different names. Skills uploaded on claude.ai reach Claude Code with the prefix `anthropic-skills:` (seen in the spike), and plugin skills with the prefix `writing-toolkit:`. The guides say to remove uploaded copies before adding the marketplace.
+6. Versions: each SKILL.md carries the toolkit version in its metadata, such as "1.1", and plugin.json carries it as "1.1.0". tools/check_repo.py checks that they agree. The profile carries the version of its own format. claude.ai shows the version on the skill's page. doc-setup offers to update an older profile.
 
 ## 14. Build order
 
@@ -577,7 +584,7 @@ How and where:
 10. notation-check. Done on 28 September 2026: it passed in Claude Code on the sample thesis, and stopped in report mode (tests/results/0.1-dev.md). Open point: it did not find $W$ used before its definition (TH04). The claude.ai run waits for the release test.
 11. The Claude Code guide, a full release test, and release v1.0. The guide and the release test were done on 28 September 2026: the Claude Code part by Claude, and the claude.ai part (tests/web-test.md) by the writer (tests/results/0.1-dev.md). The release waits for the writer's go-ahead.
 12. Version 1.1: the rules from three research papers, which the writer's notes on them adopt (docs/sources.md). human-write gets five rules: change only what a rule asks for; never cut or soften a limitation; say what a result means once; literal words, not metaphors; flag a paragraph that names nothing specific. doc-check reports pointers to "previous studies" that name no work, and repeated paragraph openings, which doc_stats.py lists. The samples get new planted problems for these rules. Test human-write and doc-check again, in Claude Code and on claude.ai. The Claude Code runs were done on 28 September 2026 (tests/results/1.1.md). The claude.ai runs wait for the writer.
-13. Later: the plugin.
+13. The plugin marketplace, with version 1.1: .claude-plugin/marketplace.json and plugin.json, a check in tools/check_repo.py, and the install steps in both guides and the README. Test it in Claude Code: validate it, install it from the repo, and run a skill through it. Then the writer adds it on claude.ai for the 1.1 web test.
 
 ## 15. Decisions
 
@@ -591,9 +598,8 @@ Decided on 28 September 2026:
 
 ## 16. Later
 
-1. The Claude Code plugin.
-2. Reviewer responses: turn reviewer comments into a response table, and apply approved changes under human-write's rules.
-3. A citation check: every citation resolves, and every claim that needs a source has one.
-4. A figure and table check: every figure is referenced in the text and has a caption that stands alone.
-5. [NEW] marks as Word comments instead of text.
-6. Languages other than English.
+1. Reviewer responses: turn reviewer comments into a response table, and apply approved changes under human-write's rules.
+2. A citation check: every citation resolves, and every claim that needs a source has one.
+3. A figure and table check: every figure is referenced in the text and has a caption that stands alone.
+4. [NEW] marks as Word comments instead of text.
+5. Languages other than English.

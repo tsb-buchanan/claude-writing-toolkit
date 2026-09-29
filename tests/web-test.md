@@ -6,9 +6,9 @@ What each run must find, change and leave alone is in tests/expected/report.md a
 
 ## Before you start
 
-1. Get the test build: the zips and web-guide.docx. Download them from the latest run of the "checks" workflow on GitHub (Actions, the run, Artifacts), or build them with `python3 tools/build_release.py`.
-2. In claude.ai, open Customize, then Skills. Remove older copies of the toolkit's skills, and any test skill such as docx-spike.
-3. Upload the five skill zips. Check that each one is switched on.
+1. In claude.ai, open Customize, then Skills, and Customize, then Plugins. Remove older copies of the toolkit's skills, and any test skill such as docx-spike.
+2. Install the version under test. Once it is on main, add the marketplace: Customize, Plugins, Add, Add marketplace, Add from a repository, `tsb-buchanan/claude-writing-toolkit` (docs/web-guide.md, Part 1, Route A). Before that, use the zips: download them from the latest run of the "checks" workflow on GitHub (Actions, the run, Artifacts), or build them with `python3 tools/build_release.py`, and upload them.
+3. Check that the five skills are switched on.
 4. Make a Project named "Toolkit test: report". Paste samples/report/doc-profile.md into its instructions.
 5. Make a Project named "Toolkit test: thesis". Paste samples/thesis/doc-profile.md into its instructions.
 6. Use Sonnet. Start a new chat for every run.
